@@ -1,0 +1,19 @@
+version: '3'
+services:
+    mariadb:
+        image: mariadb:10.3
+        container_name: wallet-mysql-server
+        volumes:
+            - mariadb:/var/lib/mysql
+        environment:
+            TZ: "Europe/Bucharest"
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+            MYSQL_ROOT_PASSWORD: 'root'
+            MYSQL_USER: 'user'
+            MYSQL_PASSWORD: 'password'
+            MYSQL_DATABASE: 'wallet'
+        ports:
+            - 3306:3306
+
+volumes:
+    mariadb:
