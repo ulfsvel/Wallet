@@ -1,76 +1,67 @@
 package ro.cheiafermecata.shamir;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class SecretsFactory {
 
-    private final SecureRandom secureRandom;
+    private final BigNumbersGenerator bigNumbersGenerator;
 
-    private final Integer numberOfBitsForSecretGeneration;
+    private final Integer numberOfBitsForSecret;
 
-    public SecretsFactory(SecureRandom secureRandom, Integer numberOfBitsForSecretGeneration){
-        this.secureRandom = secureRandom;
-        this.numberOfBitsForSecretGeneration = numberOfBitsForSecretGeneration;
+    private final BigInteger bigPrime;
+
+    public SecretsFactory(
+            @NotNull BigNumbersGenerator bigNumbersGenerator,
+            @NotNull Integer numberOfBitsForSecret
+    ) {
+        this.bigNumbersGenerator = bigNumbersGenerator;
+        this.numberOfBitsForSecret = numberOfBitsForSecret;
+        this.bigPrime = this.bigNumbersGenerator.generateMersennePrimeNumber(numberOfBitsForSecret);
     }
 
     @NotNull
-    @Contract(" -> new")
-    private BigInteger generateRandomNumber() {
-        return new BigInteger(numberOfBitsForSecretGeneration, secureRandom);
-    }
+    public SecretGroup createSecret(
+            @NotNull Integer sharesToRebuild,
+            @NotNull Integer totalShares
+    ) {
+        if (sharesToRebuild > totalShares) {
+            throw new IllegalArgumentException("Minimum shares to rebuild should be should not be greater than total shares");
+        }
+        List<Share> shares = new LinkedList<>();
 
-    private BigInteger generatePrimeNumberBasedOnNumberOfBits() {
-        BigInteger two = new BigInteger("2");
-        return two.pow(numberOfBitsForSecretGeneration).subtract(BigInteger.ONE);
-    }
+        List<BigInteger> poly = bigNumbersGenerator.createListOfRandomNumbers(
+                sharesToRebuild,
+                numberOfBitsForSecret
+        );
 
+        for (int index = 1; index <= totalShares; index = index + 1) {
+            shares.add(
+                    new Share(
+                            MathHelper.evaluatePoly(poly, index, this.bigPrime),
+                            new BigInteger(String.valueOf(index))
+                    )
+            );
+        }
+
+        return new SecretGroup(sharesToRebuild, shares, poly.get(0));
+    }
 
     @NotNull
-    private List<BigInteger> createPolyOfRandomNumbers(Integer minimumSharesToRebuild) {
-        ArrayList<BigInteger> poly = new ArrayList<>();
-        poly.ensureCapacity(minimumSharesToRebuild);
-        for(int index = 0; index < minimumSharesToRebuild; index = index +1 ){
-            poly.add(this.generateRandomNumber());
+    public BigInteger rebuildSecret(
+            @NotNull List<Share> shares
+    ) {
+        List<BigInteger> xS = new LinkedList<>();
+        List<BigInteger> yS = new LinkedList<>();
+
+        for (Share share : shares) {
+            xS.add(share.getShareNumber());
+            yS.add(share.getActualShare());
         }
 
-        return  poly;
+        return MathHelper.lagrangeInterpolate(BigInteger.ZERO, xS, yS, this.bigPrime);
     }
-
-    private BigInteger evaluatePoly(@NotNull List<BigInteger> poly, @NotNull Integer position, BigInteger primeNumber){
-        BigInteger value = new BigInteger("0");
-        BigInteger polyPosition = new BigInteger(position.toString());
-
-        ListIterator<BigInteger> listIterator = poly.listIterator(poly.size());
-        while (listIterator.hasPrevious()) {
-            BigInteger currentPolyValue = listIterator.previous();
-            value = value.multiply(polyPosition);
-            value = value.add(currentPolyValue);
-            value = value.mod(primeNumber);
-        }
-
-        return value;
-    }
-
-
-    public Secret createSecret(Integer minimumSharesToRebuild, Integer totalShares) {
-        ArrayList<BigInteger> shares = new ArrayList<>();
-        shares.ensureCapacity(totalShares);
-
-        List<BigInteger> poly = this.createPolyOfRandomNumbers(minimumSharesToRebuild);
-        BigInteger bigPrime = this.generatePrimeNumberBasedOnNumberOfBits();
-
-        for(int index = 1; index <= totalShares; index = index + 1){
-            shares.add(evaluatePoly(poly, index, bigPrime));
-        }
-
-        return new Secret(minimumSharesToRebuild, shares, poly.get(0));
-    }
-
 }

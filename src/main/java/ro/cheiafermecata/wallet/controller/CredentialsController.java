@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Keys;
-import ro.cheiafermecata.shamir.Secret;
+import ro.cheiafermecata.shamir.BigNumbersGenerator;
+import ro.cheiafermecata.shamir.SecretGroup;
 import ro.cheiafermecata.shamir.SecretsFactory;
 import ro.cheiafermecata.wallet.response.WalletCreatedResponse;
 
@@ -30,10 +31,10 @@ public class CredentialsController {
     }
 
     @PostMapping("/secret")
-    public Secret createSecret(){
-        SecretsFactory secretsFactory = new SecretsFactory(new SecureRandom(), 127);
+    public SecretGroup createSecret() {
+        SecretsFactory secretsFactory = new SecretsFactory(new BigNumbersGenerator(new SecureRandom()), 127);
 
-        return secretsFactory.createSecret(2,3);
+        return secretsFactory.createSecret(2, 3);
     }
 
 }
