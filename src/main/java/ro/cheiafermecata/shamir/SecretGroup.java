@@ -13,7 +13,7 @@ public class SecretGroup {
 
     private BigInteger actualSecret;
 
-    SecretGroup(
+    public SecretGroup(
             @NotNull Integer sharesToRebuild,
             @NotNull List<Share> shares,
             @NotNull BigInteger actualSecret

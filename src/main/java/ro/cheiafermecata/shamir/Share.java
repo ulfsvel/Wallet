@@ -11,6 +11,14 @@ public class Share {
     private final BigInteger shareNumber;
 
     public Share(
+            @NotNull String stringRepresentation
+    ) {
+        String[] parts = stringRepresentation.split("@");
+        shareNumber = new BigInteger(parts[0]);
+        actualShare = new BigInteger(parts[1]);
+    }
+
+    public Share(
             @NotNull BigInteger actualShare,
             @NotNull BigInteger shareNumber
     ) {
@@ -26,5 +34,9 @@ public class Share {
     @NotNull
     public BigInteger getShareNumber() {
         return shareNumber;
+    }
+
+    public String toString() {
+        return shareNumber.toString() + "@" + actualShare.toString();
     }
 }
