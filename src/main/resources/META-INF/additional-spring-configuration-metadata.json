@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "web3j.endpoint",
+      "type": "java.lang.String",
+      "description": "The endpoint to use for connecting to the ETH network."
+    }
+  ]
+}
