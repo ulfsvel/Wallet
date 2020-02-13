@@ -3,6 +3,7 @@ package com.ulfsvel.wallet.common.service;
 import com.ulfsvel.shamir.SecretGroup;
 import com.ulfsvel.shamir.SecretsFactory;
 import com.ulfsvel.shamir.Share;
+import com.ulfsvel.wallet.common.entiry.UnencryptedWallet;
 import com.ulfsvel.wallet.common.entiry.Wallet;
 import com.ulfsvel.wallet.common.entiry.security.ShamirBasicSecurity;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
@@ -11,33 +12,34 @@ import com.ulfsvel.wallet.common.service.SecureSecretStorage.SecureSecretStorage
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ShamirBasicSecurityWalletServiceTest {
+public class ShamirBasicSecurityEthWalletSecurityServiceTest {
 
     private static final String password = "test";
 
-    @Test
-    public void testPrivateKeyDecryptionWithUserPassword() throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
-        ShamirBasicSecurityWalletService shamirBasicSecurityWalletService = getWalletService();
-        Wallet resultedWallet = shamirBasicSecurityWalletService.createWallet(password);
+    private static final String privateKey = "privateKey";
 
-        BigInteger privateKey = shamirBasicSecurityWalletService.getPrivateKeyForWallet(resultedWallet, password);
-        assertNotNull(privateKey);
+    @Test
+    public void testPrivateKeyDecryptionWithUserPassword() {
+        ShamirBasicSecurityWalletSecurityService shamirBasicSecurityWalletService = getWalletService();
+        UnencryptedWallet unencryptedWallet = new UnencryptedWallet().setPrivateKey(privateKey);
+
+        Wallet resultedWallet = shamirBasicSecurityWalletService.encryptWallet(unencryptedWallet, password);
+
+        UnencryptedWallet recoveredWallet = shamirBasicSecurityWalletService.decryptWallet(resultedWallet, password);
+        assertEquals(unencryptedWallet.getPrivateKey(), recoveredWallet.getPrivateKey());
     }
 
-    private ShamirBasicSecurityWalletService getWalletService() {
-        return new ShamirBasicSecurityWalletService(
+    private ShamirBasicSecurityWalletSecurityService getWalletService() {
+        return new ShamirBasicSecurityWalletSecurityService(
                 getWalletRepository(),
                 getShamirBasicSecurityRepository(),
                 getSecretsFactory(),

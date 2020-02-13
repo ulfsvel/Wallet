@@ -18,7 +18,7 @@ public class DatabaseSecureSecretStorage implements SecureSecretStorage {
 
     @Override
     public String getSecretForWallet(@NotNull Wallet wallet) {
-        Optional<Secret> optionalSecret = secretRepository.findSecretByWallet_Id(wallet.getId());
+        Optional<Secret> optionalSecret = secretRepository.findSecretByWallet(wallet);
         if (optionalSecret.isPresent()) {
             Secret secret = optionalSecret.get();
             return secret.getSecret();
@@ -29,7 +29,14 @@ public class DatabaseSecureSecretStorage implements SecureSecretStorage {
 
     @Override
     public void setSecretForWallet(Wallet wallet, String secretString) {
-        Secret secret = new Secret(wallet, secretString);
+        Optional<Secret> optionalSecret = secretRepository.findSecretByWallet(wallet);
+        Secret secret;
+        if (optionalSecret.isPresent()) {
+            secret = optionalSecret.get().setSecret(secretString);
+        } else {
+            secret = new Secret(wallet, secretString);
+        }
+
         secretRepository.save(secret);
     }
 }

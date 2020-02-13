@@ -35,4 +35,9 @@ public class Secret {
     public String getSecret() {
         return secret;
     }
+
+    public Secret setSecret(String secret) {
+        this.secret = secret;
+        return this;
+    }
 }

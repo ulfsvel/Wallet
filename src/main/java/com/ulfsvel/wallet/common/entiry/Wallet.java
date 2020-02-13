@@ -10,6 +10,8 @@ import javax.persistence.Id;
 public class Wallet {
     public static final int SHAMIR_BASIC_SECURITY = 1;
 
+    public static final int ETH_WALLET = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -17,12 +19,34 @@ public class Wallet {
     private String publicKey;
     private String publicAddress;
     private int walletSecurityType;
+    private int walletType;
 
     public Wallet() {
     }
 
+    public Wallet(UnencryptedWallet wallet) {
+        id = wallet.getId();
+        publicKey = wallet.getPublicKey();
+        publicAddress = wallet.getPublicAddress();
+        walletType = wallet.getWalletType();
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public Wallet setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public int getWalletType() {
+        return walletType;
+    }
+
+    public Wallet setWalletType(int walletType) {
+        this.walletType = walletType;
+        return this;
     }
 
     public String getEncryptedPrivateKey() {
