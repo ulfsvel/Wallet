@@ -1,48 +1,47 @@
 package com.ulfsvel.wallet.eth.request;
 
+
+import java.util.Map;
+
+
 public class TransferFoundsRequest {
 
-    private Long walletId;
+    private Map<String, Object> credentials;
+    private String publicAddress;
 
-    private String password;
+    public Map<String, Object> getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(Map<String, Object> credentials) {
+        this.credentials = credentials;
+    }
 
     private String to;
 
     private String amount;
 
-    public Long getWalletId() {
-        return walletId;
+    public String getPublicAddress() {
+        return publicAddress;
     }
 
-    public TransferFoundsRequest setWalletId(Long walletId) {
-        this.walletId = walletId;
-        return this;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public TransferFoundsRequest setPassword(String password) {
-        this.password = password;
-        return this;
+    public void setPublicAddress(String publicAddress) {
+        this.publicAddress = publicAddress;
     }
 
     public String getTo() {
         return to;
     }
 
-    public TransferFoundsRequest setTo(String to) {
+    public void setTo(String to) {
         this.to = to;
-        return this;
     }
 
     public String getAmount() {
         return amount;
     }
 
-    public TransferFoundsRequest setAmount(String amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
-        return this;
     }
 }

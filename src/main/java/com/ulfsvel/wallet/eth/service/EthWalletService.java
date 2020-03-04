@@ -1,8 +1,10 @@
 package com.ulfsvel.wallet.eth.service;
 
-import com.ulfsvel.wallet.common.entiry.UnencryptedWallet;
-import com.ulfsvel.wallet.common.entiry.Wallet;
-import com.ulfsvel.wallet.common.entiry.WalletCredentials;
+import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
+import com.ulfsvel.wallet.common.entity.Wallet;
+import com.ulfsvel.wallet.common.entity.WalletCredentials;
+import com.ulfsvel.wallet.common.enums.WalletSecurityType;
+import com.ulfsvel.wallet.common.enums.WalletType;
 import com.ulfsvel.wallet.common.factory.WalletSecurityFactory;
 import com.ulfsvel.wallet.common.service.WalletSecurityService;
 import com.ulfsvel.wallet.eth.entity.EthTransaction;
@@ -49,17 +51,17 @@ public class EthWalletService {
                 .setPrivateKey(keyPair.getPrivateKey().toString())
                 .setPublicKey(keyPair.getPublicKey().toString())
                 .setPublicAddress(credentials.getAddress())
-                .setWalletType(Wallet.ETH_WALLET);
+                .setWalletType(WalletType.ETH);
     }
 
-    public Wallet createWallet(WalletCredentials walletCredentials, int walletSecurityType) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
+    public Wallet createWallet(WalletCredentials walletCredentials, WalletSecurityType walletSecurityType) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
         return encryptWallet(generateWallet(), walletCredentials, walletSecurityType);
     }
 
     private Wallet encryptWallet(
             UnencryptedWallet unencryptedWallet,
             WalletCredentials walletCredentials,
-            int walletSecurityType
+            WalletSecurityType walletSecurityType
     ) {
         WalletSecurityService walletSecurityService = walletSecurityFactory.getWalletSecurityService(walletSecurityType);
         if (walletSecurityService.areEncryptCredentialsValid(walletCredentials)) {
@@ -97,7 +99,7 @@ public class EthWalletService {
             Wallet wallet,
             WalletCredentials initialWalletCredentials,
             WalletCredentials targetCredentials,
-            int targetWalletSecurityType
+            WalletSecurityType targetWalletSecurityType
     ) {
         UnencryptedWallet unencryptedWallet = decryptWallet(wallet, initialWalletCredentials);
         return encryptWallet(unencryptedWallet, targetCredentials, targetWalletSecurityType);
@@ -107,7 +109,7 @@ public class EthWalletService {
             Wallet wallet,
             WalletCredentials initialWalletCredentials,
             WalletCredentials targetCredentials,
-            int targetWalletSecurityType
+            WalletSecurityType targetWalletSecurityType
     ) {
         UnencryptedWallet unencryptedWallet = recoverWallet(wallet, initialWalletCredentials);
         return encryptWallet(unencryptedWallet, targetCredentials, targetWalletSecurityType);

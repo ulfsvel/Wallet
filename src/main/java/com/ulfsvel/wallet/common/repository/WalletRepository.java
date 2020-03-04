@@ -1,6 +1,6 @@
 package com.ulfsvel.wallet.common.repository;
 
-import com.ulfsvel.wallet.common.entiry.Wallet;
+import com.ulfsvel.wallet.common.entity.Wallet;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

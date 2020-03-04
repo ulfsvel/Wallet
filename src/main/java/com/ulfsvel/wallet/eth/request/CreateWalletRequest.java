@@ -1,15 +1,26 @@
 package com.ulfsvel.wallet.eth.request;
 
+
+import java.util.Map;
+
 public class CreateWalletRequest {
 
-    public String password;
+    private Map<String, Object> credentials;
+    private String securityType;
 
-    public String getPassword() {
-        return password;
+    public Map<String, Object> getCredentials() {
+        return credentials;
     }
 
-    public CreateWalletRequest setPassword(String password) {
-        this.password = password;
-        return this;
+    public void setCredentials(Map<String, Object> credentials) {
+        this.credentials = credentials;
+    }
+
+    public String getSecurityType() {
+        return securityType;
+    }
+
+    public void setSecurityType(String securityType) {
+        this.securityType = securityType;
     }
 }

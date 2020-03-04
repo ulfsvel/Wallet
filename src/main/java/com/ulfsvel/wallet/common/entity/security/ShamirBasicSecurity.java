@@ -1,7 +1,7 @@
-package com.ulfsvel.wallet.common.entiry.security;
+package com.ulfsvel.wallet.common.entity.security;
 
 
-import com.ulfsvel.wallet.common.entiry.Wallet;
+import com.ulfsvel.wallet.common.entity.Wallet;
 
 import javax.persistence.*;
 
@@ -15,8 +15,7 @@ public class ShamirBasicSecurity {
     private String encryptedEncryptionKey;
     private String encryptionSalt;
 
-    @OneToOne
-    @JoinColumn()
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Wallet wallet;
 
     public ShamirBasicSecurity() {

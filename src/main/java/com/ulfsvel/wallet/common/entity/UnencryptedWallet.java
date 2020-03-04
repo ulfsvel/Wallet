@@ -1,5 +1,7 @@
-package com.ulfsvel.wallet.common.entiry;
+package com.ulfsvel.wallet.common.entity;
 
+
+import com.ulfsvel.wallet.common.enums.WalletType;
 
 public class UnencryptedWallet {
 
@@ -7,7 +9,7 @@ public class UnencryptedWallet {
     private String privateKey;
     private String publicKey;
     private String publicAddress;
-    private int walletType;
+    private WalletType walletType;
 
     public UnencryptedWallet() {
     }
@@ -56,11 +58,11 @@ public class UnencryptedWallet {
         return this;
     }
 
-    public int getWalletType() {
+    public WalletType getWalletType() {
         return walletType;
     }
 
-    public UnencryptedWallet setWalletType(int walletType) {
+    public UnencryptedWallet setWalletType(WalletType walletType) {
         this.walletType = walletType;
         return this;
     }

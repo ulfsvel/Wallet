@@ -3,10 +3,11 @@ package com.ulfsvel.wallet.common.service;
 import com.ulfsvel.shamir.SecretGroup;
 import com.ulfsvel.shamir.SecretsFactory;
 import com.ulfsvel.shamir.Share;
-import com.ulfsvel.wallet.common.entiry.UnencryptedWallet;
-import com.ulfsvel.wallet.common.entiry.Wallet;
-import com.ulfsvel.wallet.common.entiry.WalletCredentials;
-import com.ulfsvel.wallet.common.entiry.security.ShamirBasicSecurity;
+import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
+import com.ulfsvel.wallet.common.entity.Wallet;
+import com.ulfsvel.wallet.common.entity.WalletCredentials;
+import com.ulfsvel.wallet.common.entity.security.ShamirBasicSecurity;
+import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.common.repository.security.ShamirBasicSecurityRepository;
 import com.ulfsvel.wallet.common.service.SecureSecretStorage.SecureSecretStorage;
@@ -14,11 +15,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class ShamirBasicSecurityWalletSecurityService implements WalletSecurityService {
+public class ShamirBasicWalletSecurityService implements WalletSecurityService {
 
     private final WalletRepository walletRepository;
 
@@ -28,7 +28,7 @@ public class ShamirBasicSecurityWalletSecurityService implements WalletSecurityS
 
     private final SecureSecretStorage secureSecretStorage;
 
-    public ShamirBasicSecurityWalletSecurityService(WalletRepository walletRepository, ShamirBasicSecurityRepository shamirBasicSecurityRepository, SecretsFactory secretsFactory, SecureSecretStorage secureSecretStorage) {
+    public ShamirBasicWalletSecurityService(WalletRepository walletRepository, ShamirBasicSecurityRepository shamirBasicSecurityRepository, SecretsFactory secretsFactory, SecureSecretStorage secureSecretStorage) {
         this.walletRepository = walletRepository;
         this.shamirBasicSecurityRepository = shamirBasicSecurityRepository;
         this.secretsFactory = secretsFactory;
@@ -91,7 +91,7 @@ public class ShamirBasicSecurityWalletSecurityService implements WalletSecurityS
 
         Wallet wallet = new Wallet(unencryptedWallet)
                 .setEncryptedPrivateKey(encryptedPrivateKey)
-                .setWalletSecurityType(Wallet.SHAMIR_BASIC_SECURITY);
+                .setWalletSecurityType(WalletSecurityType.ShamirBasic);
 
         wallet = walletRepository.save(wallet);
 
@@ -141,6 +141,11 @@ public class ShamirBasicSecurityWalletSecurityService implements WalletSecurityS
         return true;
     }
 
+    @Override
+    public boolean isRecoveryAvailable() {
+        return true;
+    }
+
     private ShamirBasicSecurity getShamirBasicSecurity(Wallet wallet) {
         Optional<ShamirBasicSecurity> optionalShamirBasicSecurity = shamirBasicSecurityRepository.findShamirBasicSecurityByWallet(wallet);
         if (!optionalShamirBasicSecurity.isPresent()) {
@@ -150,14 +155,13 @@ public class ShamirBasicSecurityWalletSecurityService implements WalletSecurityS
     }
 
     private boolean areCredentialsValid(WalletCredentials walletCredentials) {
-        Map<String, ? super Object> credentials = walletCredentials.getCredentials();
-        if (!credentials.containsKey("password")) {
+        if (!walletCredentials.containsKey("password")) {
             return false;
         }
-        return credentials.get("password") instanceof String;
+        return walletCredentials.get("password") instanceof String;
     }
 
     private String getPasswordFromCredentials(WalletCredentials walletCredentials) {
-        return (String) walletCredentials.getCredentials().get("password");
+        return (String) walletCredentials.get("password");
     }
 }

@@ -1,8 +1,8 @@
 package com.ulfsvel.wallet.common.service;
 
-import com.ulfsvel.wallet.common.entiry.UnencryptedWallet;
-import com.ulfsvel.wallet.common.entiry.Wallet;
-import com.ulfsvel.wallet.common.entiry.WalletCredentials;
+import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
+import com.ulfsvel.wallet.common.entity.Wallet;
+import com.ulfsvel.wallet.common.entity.WalletCredentials;
 
 public interface WalletSecurityService {
 
@@ -17,5 +17,7 @@ public interface WalletSecurityService {
     boolean areDecryptCredentialsValid(WalletCredentials walletCredentials);
 
     boolean areRecoverCredentialsValid(WalletCredentials walletCredentials);
+
+    boolean isRecoveryAvailable();
 
 }

@@ -3,9 +3,9 @@ package com.ulfsvel.wallet.common.service;
 import com.ulfsvel.shamir.SecretGroup;
 import com.ulfsvel.shamir.SecretsFactory;
 import com.ulfsvel.shamir.Share;
-import com.ulfsvel.wallet.common.entiry.UnencryptedWallet;
-import com.ulfsvel.wallet.common.entiry.Wallet;
-import com.ulfsvel.wallet.common.entiry.security.ShamirBasicSecurity;
+import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
+import com.ulfsvel.wallet.common.entity.Wallet;
+import com.ulfsvel.wallet.common.entity.security.ShamirBasicSecurity;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.common.repository.security.ShamirBasicSecurityRepository;
 import com.ulfsvel.wallet.common.service.SecureSecretStorage.SecureSecretStorage;
@@ -29,7 +29,7 @@ public class ShamirBasicSecurityEthWalletSecurityServiceTest {
 
     @Test
     public void testPrivateKeyDecryptionWithUserPassword() {
-        ShamirBasicSecurityWalletSecurityService shamirBasicSecurityWalletService = getWalletService();
+        ShamirBasicWalletSecurityService shamirBasicSecurityWalletService = getWalletService();
         UnencryptedWallet unencryptedWallet = new UnencryptedWallet().setPrivateKey(privateKey);
 
         Wallet resultedWallet = shamirBasicSecurityWalletService.encryptWallet(unencryptedWallet, password);
@@ -38,8 +38,8 @@ public class ShamirBasicSecurityEthWalletSecurityServiceTest {
         assertEquals(unencryptedWallet.getPrivateKey(), recoveredWallet.getPrivateKey());
     }
 
-    private ShamirBasicSecurityWalletSecurityService getWalletService() {
-        return new ShamirBasicSecurityWalletSecurityService(
+    private ShamirBasicWalletSecurityService getWalletService() {
+        return new ShamirBasicWalletSecurityService(
                 getWalletRepository(),
                 getShamirBasicSecurityRepository(),
                 getSecretsFactory(),

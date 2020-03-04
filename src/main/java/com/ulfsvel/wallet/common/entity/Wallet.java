@@ -1,5 +1,8 @@
-package com.ulfsvel.wallet.common.entiry;
+package com.ulfsvel.wallet.common.entity;
 
+
+import com.ulfsvel.wallet.common.enums.WalletSecurityType;
+import com.ulfsvel.wallet.common.enums.WalletType;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import javax.persistence.Id;
 @Entity
 public class Wallet {
     public static final int SHAMIR_BASIC_SECURITY = 1;
+    public static final int AES_BASIC_SECURITY = 2;
 
     public static final int ETH_WALLET = 1;
 
@@ -18,8 +22,8 @@ public class Wallet {
     private String encryptedPrivateKey;
     private String publicKey;
     private String publicAddress;
-    private int walletSecurityType;
-    private int walletType;
+    private WalletSecurityType walletSecurityType;
+    private WalletType walletType;
 
     public Wallet() {
     }
@@ -40,11 +44,11 @@ public class Wallet {
         return this;
     }
 
-    public int getWalletType() {
+    public WalletType getWalletType() {
         return walletType;
     }
 
-    public Wallet setWalletType(int walletType) {
+    public Wallet setWalletType(WalletType walletType) {
         this.walletType = walletType;
         return this;
     }
@@ -76,11 +80,11 @@ public class Wallet {
         return this;
     }
 
-    public int getWalletSecurityType() {
+    public WalletSecurityType getWalletSecurityType() {
         return walletSecurityType;
     }
 
-    public Wallet setWalletSecurityType(int walletSecurityType) {
+    public Wallet setWalletSecurityType(WalletSecurityType walletSecurityType) {
         this.walletSecurityType = walletSecurityType;
         return this;
     }

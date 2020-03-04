@@ -1,7 +1,7 @@
 package com.ulfsvel.wallet.eth.entity;
 
 
-import com.ulfsvel.wallet.common.entiry.Wallet;
+import com.ulfsvel.wallet.common.entity.Wallet;
 import org.web3j.protocol.core.methods.response.Transaction;
 
 import javax.persistence.*;
@@ -34,8 +34,7 @@ public class EthTransaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn()
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Wallet wallet;
 
     private String hash;

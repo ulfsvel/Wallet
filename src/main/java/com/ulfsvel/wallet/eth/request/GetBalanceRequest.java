@@ -8,8 +8,7 @@ public class GetBalanceRequest {
         return publicAddress;
     }
 
-    public GetBalanceRequest setPublicAddress(String publicAddress) {
+    public void setPublicAddress(String publicAddress) {
         this.publicAddress = publicAddress;
-        return this;
     }
 }

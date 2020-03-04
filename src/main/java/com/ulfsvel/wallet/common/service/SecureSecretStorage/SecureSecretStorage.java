@@ -1,6 +1,6 @@
 package com.ulfsvel.wallet.common.service.SecureSecretStorage;
 
-import com.ulfsvel.wallet.common.entiry.Wallet;
+import com.ulfsvel.wallet.common.entity.Wallet;
 
 public interface SecureSecretStorage {
 
