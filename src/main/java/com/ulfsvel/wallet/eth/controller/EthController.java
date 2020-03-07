@@ -76,7 +76,7 @@ public class EthController {
         );
     }
 
-    @PostMapping("getAccountBalance")
+    @PostMapping("getWalletBalance")
     public BigInteger getAccountBalance(@RequestBody GetBalanceRequest getBalanceRequest) throws IOException {
         Optional<Wallet> walletOptional = walletRepository.findWalletByPublicAddress(getBalanceRequest.getPublicAddress());
         if (!walletOptional.isPresent()) {
@@ -99,7 +99,7 @@ public class EthController {
         );
     }
 
-    @PostMapping("getAccountTransactions")
+    @PostMapping("getWalletTransactions")
     public List<EthTransaction> getTransaction(@RequestBody GetTransactionsRequest getTransactionsRequest) {
         return ethTransactionRepository.findAllByWalletPublicAddress(
                 getTransactionsRequest.getPublicAddress()
