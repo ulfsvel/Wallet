@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import java.security.SecureRandom;
 
 @Configuration
-public class ShamirConfig {
+public class ShamirConfiguration {
 
     @Value("${shamir.numberOfBitsForSecret:127}")
     private Integer numberOfBitsForSecret;
