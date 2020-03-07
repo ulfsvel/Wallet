@@ -5,6 +5,7 @@ import com.ulfsvel.wallet.common.entity.WalletCredentials;
 import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.eth.entity.EthTransaction;
+import com.ulfsvel.wallet.eth.repository.EthTransactionRepository;
 import com.ulfsvel.wallet.eth.request.*;
 import com.ulfsvel.wallet.eth.service.EthWalletService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -29,10 +31,12 @@ public class EthController {
 
     private final EthWalletService ethWalletService;
 
+    private final EthTransactionRepository ethTransactionRepository;
 
-    public EthController(WalletRepository walletRepository, EthWalletService ethWalletService) {
+    public EthController(WalletRepository walletRepository, EthWalletService ethWalletService, EthTransactionRepository ethTransactionRepository) {
         this.walletRepository = walletRepository;
         this.ethWalletService = ethWalletService;
+        this.ethTransactionRepository = ethTransactionRepository;
     }
 
     @PostMapping("createWallet")
@@ -92,6 +96,13 @@ public class EthController {
                 new WalletCredentials(transferFoundsRequest.getCredentials()),
                 transferFoundsRequest.getTo(),
                 new BigDecimal(transferFoundsRequest.getAmount())
+        );
+    }
+
+    @PostMapping("getAccountTransactions")
+    public List<EthTransaction> getTransaction(@RequestBody GetTransactionsRequest getTransactionsRequest) {
+        return ethTransactionRepository.findAllByWalletPublicAddress(
+                getTransactionsRequest.getPublicAddress()
         );
     }
 }

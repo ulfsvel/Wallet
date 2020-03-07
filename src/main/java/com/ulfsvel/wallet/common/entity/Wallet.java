@@ -11,10 +11,6 @@ import javax.persistence.Id;
 
 @Entity
 public class Wallet {
-    public static final int SHAMIR_BASIC_SECURITY = 1;
-    public static final int AES_BASIC_SECURITY = 2;
-
-    public static final int ETH_WALLET = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
