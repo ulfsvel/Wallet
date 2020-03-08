@@ -10,6 +10,7 @@ public class UnencryptedWallet {
     private String publicKey;
     private String publicAddress;
     private WalletType walletType;
+    private User user;
 
     public UnencryptedWallet() {
     }
@@ -20,6 +21,7 @@ public class UnencryptedWallet {
         publicKey = wallet.getPublicKey();
         publicAddress = wallet.getPublicAddress();
         walletType = wallet.getWalletType();
+        user = wallet.getUser();
     }
 
     public long getId() {
@@ -29,6 +31,14 @@ public class UnencryptedWallet {
     public UnencryptedWallet setId(long id) {
         this.id = id;
         return this;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getPrivateKey() {

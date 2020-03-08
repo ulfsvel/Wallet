@@ -1,6 +1,7 @@
 package com.ulfsvel.wallet.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ulfsvel.wallet.common.entity.CustomPrincipal;
 import com.ulfsvel.wallet.common.request.AuthenticationRequest;
 import com.ulfsvel.wallet.common.response.AuthenticationResponse;
 import io.jsonwebtoken.Jwts;
@@ -10,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain filterChain, Authentication authentication) throws IOException {
-        User user = ((User) authentication.getPrincipal());
+        CustomPrincipal user = ((CustomPrincipal) authentication.getPrincipal());
 
         List<String> roles = user.getAuthorities()
                 .stream()

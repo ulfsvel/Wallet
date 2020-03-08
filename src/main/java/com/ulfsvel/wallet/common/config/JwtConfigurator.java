@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JwtConfigurator {
 
-    @Value("${jwt.authUrl:/api/authenticate}")
+    @Value("${jwt.authUrl:/api/public/authenticate}")
     private String authUrl;
 
     @Value("${jwt.issuer:wallet-api}")

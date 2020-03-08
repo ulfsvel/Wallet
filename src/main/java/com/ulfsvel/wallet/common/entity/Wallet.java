@@ -1,13 +1,11 @@
 package com.ulfsvel.wallet.common.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.enums.WalletType;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Wallet {
@@ -15,11 +13,19 @@ public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @JsonIgnore
     private String encryptedPrivateKey;
+
     private String publicKey;
     private String publicAddress;
     private WalletSecurityType walletSecurityType;
     private WalletType walletType;
+
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(nullable = false)
+    private User user;
 
     public Wallet() {
     }
@@ -29,15 +35,11 @@ public class Wallet {
         publicKey = wallet.getPublicKey();
         publicAddress = wallet.getPublicAddress();
         walletType = wallet.getWalletType();
+        user = wallet.getUser();
     }
 
     public Long getId() {
         return id;
-    }
-
-    public Wallet setId(Long id) {
-        this.id = id;
-        return this;
     }
 
     public WalletType getWalletType() {
@@ -83,5 +85,13 @@ public class Wallet {
     public Wallet setWalletSecurityType(WalletSecurityType walletSecurityType) {
         this.walletSecurityType = walletSecurityType;
         return this;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

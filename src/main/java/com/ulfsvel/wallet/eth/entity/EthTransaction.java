@@ -35,6 +35,7 @@ public class EthTransaction {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(nullable = false)
     private Wallet wallet;
 
     private String hash;

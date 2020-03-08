@@ -1,6 +1,7 @@
 package com.ulfsvel.wallet.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ulfsvel.wallet.common.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -24,9 +25,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final ObjectMapper objectMapper;
 
-    public SecurityConfiguration(JwtConfiguration jwtConfiguration, ObjectMapper objectMapper) {
+    private final CustomUserDetailsService customUserDetailsService;
+
+    public SecurityConfiguration(JwtConfiguration jwtConfiguration, ObjectMapper objectMapper, CustomUserDetailsService customUserDetailsService) {
         this.jwtConfiguration = jwtConfiguration;
         this.objectMapper = objectMapper;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                //.antMatchers("/api/public").permitAll()
+                .antMatchers("/api/public/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(
@@ -51,10 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("nobody@ulfsvel.com")
-                .password(passwordEncoder().encode("password"))
-                .authorities("ROLE_USER");
+        auth.userDetailsService(customUserDetailsService);
     }
 
     @Bean

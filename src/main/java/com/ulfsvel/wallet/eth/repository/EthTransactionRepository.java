@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface EthTransactionRepository extends CrudRepository<EthTransaction, Long> {
 
-    List<EthTransaction> findAllByWalletPublicAddress(String publicAddress);
+    List<EthTransaction> findAllByWalletPublicAddressAndWalletUserEmail(String publicAddress, String email);
 
 }
