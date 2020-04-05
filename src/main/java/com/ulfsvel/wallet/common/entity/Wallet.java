@@ -23,8 +23,7 @@ public class Wallet {
     private WalletType walletType;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     public Wallet() {

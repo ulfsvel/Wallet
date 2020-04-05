@@ -1,5 +1,6 @@
-package com.ulfsvel.wallet.eth.controller;
+package com.ulfsvel.wallet.btc.controller;
 
+import com.ulfsvel.wallet.btc.service.BtcWalletService;
 import com.ulfsvel.wallet.common.entity.User;
 import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.entity.WalletCredentials;
@@ -7,10 +8,7 @@ import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.enums.WalletType;
 import com.ulfsvel.wallet.common.repository.UserRepository;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
-import com.ulfsvel.wallet.eth.entity.EthTransaction;
-import com.ulfsvel.wallet.eth.repository.EthTransactionRepository;
 import com.ulfsvel.wallet.eth.request.*;
-import com.ulfsvel.wallet.eth.service.EthWalletService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -29,22 +25,19 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("api/eth/")
-public class EthController {
+@RequestMapping("api/btc/")
+public class BtcController {
 
     private final WalletRepository walletRepository;
 
-    private final EthWalletService ethWalletService;
-
-    private final EthTransactionRepository ethTransactionRepository;
-
     private final UserRepository userRepository;
 
-    public EthController(WalletRepository walletRepository, EthWalletService ethWalletService, EthTransactionRepository ethTransactionRepository, UserRepository userRepository) {
+    private final BtcWalletService btcWalletService;
+
+    public BtcController(WalletRepository walletRepository, UserRepository userRepository, BtcWalletService btcWalletService) {
         this.walletRepository = walletRepository;
-        this.ethWalletService = ethWalletService;
-        this.ethTransactionRepository = ethTransactionRepository;
         this.userRepository = userRepository;
+        this.btcWalletService = btcWalletService;
     }
 
     @PostMapping("createWallet")
@@ -57,7 +50,7 @@ public class EthController {
             throw new ValidationException("User does not exist.");
         }
 
-        Wallet wallet = ethWalletService.createWallet(
+        Wallet wallet = btcWalletService.createWallet(
                 new WalletCredentials(createWalletRequest.getCredentials()),
                 WalletSecurityType.valueOf(createWalletRequest.getSecurityType())
         );
@@ -79,7 +72,7 @@ public class EthController {
         if (!walletOptional.isPresent()) {
             throw new RuntimeException("No walled identified by \"" + updateWalletSecurityRequest.getPublicAddress() + "\" can be found");
         }
-        return ethWalletService.changeWalletSecurityType(
+        return btcWalletService.changeWalletSecurityType(
                 walletOptional.get(),
                 new WalletCredentials(updateWalletSecurityRequest.getCurrentCredentials()),
                 new WalletCredentials(updateWalletSecurityRequest.getNewCredentials()),
@@ -100,7 +93,7 @@ public class EthController {
             throw new RuntimeException("No walled identified by \"" + recoverWalletRequest.getPublicAddress() + "\" can be found");
         }
 
-        return ethWalletService.recoverAndEncryptWallet(
+        return btcWalletService.recoverAndEncryptWallet(
                 walletOptional.get(),
                 new WalletCredentials(recoverWalletRequest.getRecoverCredentials()),
                 new WalletCredentials(recoverWalletRequest.getNewCredentials()),
@@ -109,7 +102,7 @@ public class EthController {
     }
 
     @PostMapping("getWalletBalance")
-    public BigInteger getAccountBalance(
+    public String getAccountBalance(
             @RequestBody GetBalanceRequest getBalanceRequest,
             Principal principal
     ) throws IOException {
@@ -120,11 +113,11 @@ public class EthController {
         if (!walletOptional.isPresent()) {
             throw new RuntimeException("No walled identified by \"" + getBalanceRequest.getPublicAddress() + "\" can be found");
         }
-        return ethWalletService.getBalance(walletOptional.get());
+        return btcWalletService.getBalance(walletOptional.get());
     }
 
     @PostMapping("transferFounds")
-    public EthTransaction transferBalance(
+    public String transferBalance(
             @RequestBody TransferFoundsRequest transferFoundsRequest,
             Principal principal
     ) throws Exception {
@@ -135,27 +128,29 @@ public class EthController {
         if (!walletOptional.isPresent()) {
             throw new RuntimeException("No walled identified by \"" + transferFoundsRequest.getPublicAddress() + "\" can be found");
         }
-        return ethWalletService.unlockAndTransferFounds(
+        return btcWalletService.unlockAndTransferFounds(
                 walletOptional.get(),
                 new WalletCredentials(transferFoundsRequest.getCredentials()),
                 transferFoundsRequest.getTo(),
-                new BigDecimal(transferFoundsRequest.getAmount())
+                Double.parseDouble(transferFoundsRequest.getAmount())
         );
     }
 
-    @PostMapping("getWalletTransactions")
-    public List<EthTransaction> getTransaction(
-            @RequestBody GetTransactionsRequest getTransactionsRequest,
-            Principal principal
-    ) {
-        return ethTransactionRepository.findAllByWalletPublicAddressAndWalletUserEmail(
-                getTransactionsRequest.getPublicAddress(),
-                principal.getName()
-        );
-    }
+//    @PostMapping("getWalletTransactions")
+//    public List<EthTransaction> getTransaction(
+//            @RequestBody GetTransactionsRequest getTransactionsRequest,
+//            Principal principal
+//    ) {
+//        return ethTransactionRepository.findAllByWalletPublicAddressAndWalletUserEmail(
+//                getTransactionsRequest.getPublicAddress(),
+//                principal.getName()
+//        );
+//
+//        return new LinkedList<>();
+//    }
 
     @PostMapping("getWallets")
     public List<Wallet> getWallets(Principal principal) {
-        return walletRepository.findAllByWalletTypeAndUserEmail(WalletType.ETH, principal.getName());
+        return walletRepository.findAllByWalletTypeAndUserEmail(WalletType.BTC, principal.getName());
     }
 }

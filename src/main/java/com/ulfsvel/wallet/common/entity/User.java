@@ -1,6 +1,7 @@
 package com.ulfsvel.wallet.common.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
@@ -12,7 +13,11 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String hashedPassword;
+
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Wallet> walletList;
 
     public Long getId() {
         return id;
