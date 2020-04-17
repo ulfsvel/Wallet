@@ -10,6 +10,7 @@ import com.ulfsvel.wallet.common.entity.security.ShamirBasicSecurity;
 import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.common.repository.security.ShamirBasicSecurityRepository;
+import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.common.service.SecureSecretStorage.SecureSecretStorage;
 import org.springframework.stereotype.Component;
 
@@ -122,8 +123,8 @@ public class ShamirBasicWalletSecurityService implements WalletSecurityService {
     }
 
     @Override
-    public Wallet encryptWallet(UnencryptedWallet unencryptedWallet, WalletCredentials walletCredentials) {
-        return encryptWallet(unencryptedWallet, getPasswordFromCredentials(walletCredentials));
+    public WalletSecurityResponse encryptWallet(UnencryptedWallet unencryptedWallet, WalletCredentials walletCredentials) {
+        return new WalletSecurityResponse(encryptWallet(unencryptedWallet, getPasswordFromCredentials(walletCredentials)));
     }
 
     @Override
@@ -137,13 +138,13 @@ public class ShamirBasicWalletSecurityService implements WalletSecurityService {
     }
 
     @Override
-    public boolean areRecoverCredentialsValid(WalletCredentials walletCredentials) {
-        return true;
+    public boolean areRecoverCredentialsInvalid(WalletCredentials walletCredentials) {
+        return false;
     }
 
     @Override
-    public boolean isRecoveryAvailable() {
-        return true;
+    public boolean isRecoveryNotAvailable() {
+        return false;
     }
 
     private ShamirBasicSecurity getShamirBasicSecurity(Wallet wallet) {

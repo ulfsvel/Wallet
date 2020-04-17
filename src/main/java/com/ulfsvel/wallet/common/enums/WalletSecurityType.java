@@ -1,5 +1,5 @@
 package com.ulfsvel.wallet.common.enums;
 
 public enum WalletSecurityType {
-    ShamirBasic, AesBasic
+    ShamirBasic, AesBasic, Paper, ShamirAdvanced
 }

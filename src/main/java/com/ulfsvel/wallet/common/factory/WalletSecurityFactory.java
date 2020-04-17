@@ -1,9 +1,7 @@
 package com.ulfsvel.wallet.common.factory;
 
 import com.ulfsvel.wallet.common.enums.WalletSecurityType;
-import com.ulfsvel.wallet.common.service.AesBasicWalletSecurityService;
-import com.ulfsvel.wallet.common.service.ShamirBasicWalletSecurityService;
-import com.ulfsvel.wallet.common.service.WalletSecurityService;
+import com.ulfsvel.wallet.common.service.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,9 +11,15 @@ public class WalletSecurityFactory {
 
     private final AesBasicWalletSecurityService aesBasicWalletSecurityService;
 
-    public WalletSecurityFactory(ShamirBasicWalletSecurityService shamirBasicWalletSecurityService, AesBasicWalletSecurityService aesBasicWalletSecurityService) {
+    private final PaperWalletSecurityService paperWalletSecurityService;
+
+    private final ShamirAdvancedWalletSecurityService shamirAdvancedWalletSecurityService;
+
+    public WalletSecurityFactory(ShamirBasicWalletSecurityService shamirBasicWalletSecurityService, AesBasicWalletSecurityService aesBasicWalletSecurityService, PaperWalletSecurityService paperWalletSecurityService, ShamirAdvancedWalletSecurityService shamirAdvancedWalletSecurityService) {
         this.shamirBasicWalletSecurityService = shamirBasicWalletSecurityService;
         this.aesBasicWalletSecurityService = aesBasicWalletSecurityService;
+        this.paperWalletSecurityService = paperWalletSecurityService;
+        this.shamirAdvancedWalletSecurityService = shamirAdvancedWalletSecurityService;
     }
 
     public WalletSecurityService getWalletSecurityService(WalletSecurityType walletSecurityType) {
@@ -24,6 +28,10 @@ public class WalletSecurityFactory {
                 return shamirBasicWalletSecurityService;
             case AesBasic:
                 return aesBasicWalletSecurityService;
+            case Paper:
+                return paperWalletSecurityService;
+            case ShamirAdvanced:
+                return shamirAdvancedWalletSecurityService;
         }
         throw new RuntimeException("Wallet security type does not exist");
     }

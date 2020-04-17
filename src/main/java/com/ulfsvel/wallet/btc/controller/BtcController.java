@@ -8,6 +8,7 @@ import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.enums.WalletType;
 import com.ulfsvel.wallet.common.repository.UserRepository;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
+import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.eth.request.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,7 +42,7 @@ public class BtcController {
     }
 
     @PostMapping("createWallet")
-    public Wallet createWallet(
+    public WalletSecurityResponse createWallet(
             @RequestBody CreateWalletRequest createWalletRequest,
             Principal principal
     ) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, ValidationException {
@@ -50,18 +51,18 @@ public class BtcController {
             throw new ValidationException("User does not exist.");
         }
 
-        Wallet wallet = btcWalletService.createWallet(
+        WalletSecurityResponse walletSecurityResponse = btcWalletService.createWallet(
                 new WalletCredentials(createWalletRequest.getCredentials()),
                 WalletSecurityType.valueOf(createWalletRequest.getSecurityType())
         );
-        wallet.setUser(optionalUser.get());
-        walletRepository.save(wallet);
+        walletSecurityResponse.getWallet().setUser(optionalUser.get());
+        walletRepository.save(walletSecurityResponse.getWallet());
 
-        return wallet;
+        return walletSecurityResponse;
     }
 
     @PostMapping("updateWalletSecurity")
-    public Wallet updateWalletSecurity(
+    public WalletSecurityResponse updateWalletSecurity(
             @RequestBody UpdateWalletSecurityRequest updateWalletSecurityRequest,
             Principal principal
     ) {
@@ -81,7 +82,7 @@ public class BtcController {
     }
 
     @PostMapping("recoverWallet")
-    public Wallet recoverWallet(
+    public WalletSecurityResponse recoverWallet(
             @RequestBody RecoverWalletRequest recoverWalletRequest,
             Principal principal
     ) {

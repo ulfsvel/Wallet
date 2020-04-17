@@ -7,6 +7,7 @@ import com.ulfsvel.wallet.common.entity.security.AesBasicSecurity;
 import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.common.repository.security.AesBasicSecurityRepository;
+import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ValidationException;
@@ -64,8 +65,8 @@ public class AesBasicWalletSecurityService implements WalletSecurityService {
     }
 
     @Override
-    public Wallet encryptWallet(UnencryptedWallet unencryptedWallet, WalletCredentials walletCredentials) {
-        return encryptWallet(unencryptedWallet, getPasswordFromCredentials(walletCredentials));
+    public WalletSecurityResponse encryptWallet(UnencryptedWallet unencryptedWallet, WalletCredentials walletCredentials) {
+        return new WalletSecurityResponse(encryptWallet(unencryptedWallet, getPasswordFromCredentials(walletCredentials)));
     }
 
     @Override
@@ -79,13 +80,13 @@ public class AesBasicWalletSecurityService implements WalletSecurityService {
     }
 
     @Override
-    public boolean areRecoverCredentialsValid(WalletCredentials walletCredentials) {
-        return false;
+    public boolean areRecoverCredentialsInvalid(WalletCredentials walletCredentials) {
+        return true;
     }
 
     @Override
-    public boolean isRecoveryAvailable() {
-        return false;
+    public boolean isRecoveryNotAvailable() {
+        return true;
     }
 
     private AesBasicSecurity getAesBasicSecurity(Wallet wallet) {

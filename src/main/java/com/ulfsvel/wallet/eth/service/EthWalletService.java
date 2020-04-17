@@ -6,6 +6,7 @@ import com.ulfsvel.wallet.common.entity.WalletCredentials;
 import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.enums.WalletType;
 import com.ulfsvel.wallet.common.factory.WalletSecurityFactory;
+import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.common.service.WalletSecurityService;
 import com.ulfsvel.wallet.eth.entity.EthTransaction;
 import com.ulfsvel.wallet.eth.repository.EthTransactionRepository;
@@ -54,11 +55,11 @@ public class EthWalletService {
                 .setWalletType(WalletType.ETH);
     }
 
-    public Wallet createWallet(WalletCredentials walletCredentials, WalletSecurityType walletSecurityType) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
+    public WalletSecurityResponse createWallet(WalletCredentials walletCredentials, WalletSecurityType walletSecurityType) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
         return encryptWallet(generateWallet(), walletCredentials, walletSecurityType);
     }
 
-    private Wallet encryptWallet(
+    private WalletSecurityResponse encryptWallet(
             UnencryptedWallet unencryptedWallet,
             WalletCredentials walletCredentials,
             WalletSecurityType walletSecurityType
@@ -88,14 +89,14 @@ public class EthWalletService {
             WalletCredentials walletCredentials
     ) {
         WalletSecurityService walletSecurityService = walletSecurityFactory.getWalletSecurityService(wallet.getWalletSecurityType());
-        if (walletSecurityService.areRecoverCredentialsValid(walletCredentials)) {
-            return walletSecurityService.recoverWallet(wallet, walletCredentials);
+        if (walletSecurityService.isRecoveryNotAvailable() || walletSecurityService.areRecoverCredentialsInvalid(walletCredentials)) {
+            throw new RuntimeException("Error recovering wallet");
         }
 
-        throw new RuntimeException("Error recovering wallet");
+        return walletSecurityService.recoverWallet(wallet, walletCredentials);
     }
 
-    public Wallet changeWalletSecurityType(
+    public WalletSecurityResponse changeWalletSecurityType(
             Wallet wallet,
             WalletCredentials initialWalletCredentials,
             WalletCredentials targetCredentials,
@@ -105,7 +106,7 @@ public class EthWalletService {
         return encryptWallet(unencryptedWallet, targetCredentials, targetWalletSecurityType);
     }
 
-    public Wallet recoverAndEncryptWallet(
+    public WalletSecurityResponse recoverAndEncryptWallet(
             Wallet wallet,
             WalletCredentials initialWalletCredentials,
             WalletCredentials targetCredentials,
