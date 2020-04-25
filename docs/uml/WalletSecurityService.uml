@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.ulfsvel.wallet.common.service.WalletSecurityService</OriginalElement>
+  <nodes>
+    <node x="472.9999999999999" y="275.0">com.ulfsvel.wallet.common.service.ShamirAdvancedWalletSecurityService</node>
+    <node x="0.0" y="372.0">com.ulfsvel.wallet.common.service.PaperWalletSecurityService</node>
+    <node x="0.0" y="761.0">com.ulfsvel.wallet.common.factory.WalletSecurityFactory</node>
+    <node x="1116.0" y="242.0">com.ulfsvel.wallet.common.service.ShamirBasicWalletSecurityService</node>
+    <node x="894.7499999999998" y="0.0">com.ulfsvel.wallet.common.service.WalletSecurityService</node>
+    <node x="1820.0" y="275.0">com.ulfsvel.wallet.common.service.AesBasicWalletSecurityService</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.ulfsvel.wallet.common.service.ShamirBasicWalletSecurityService" target="com.ulfsvel.wallet.common.service.WalletSecurityService">
+      <point x="-1.1368683772161603E-13" y="-237.0" />
+      <point x="1457.9999999999998" y="222.0" />
+      <point x="1177.8749999999998" y="222.0" />
+      <point x="56.625" y="96.0" />
+    </edge>
+    <edge source="com.ulfsvel.wallet.common.service.ShamirAdvancedWalletSecurityService" target="com.ulfsvel.wallet.common.service.WalletSecurityService">
+      <point x="0.0" y="-204.0" />
+      <point x="784.4999999999999" y="222.0" />
+      <point x="1064.6249999999998" y="222.0" />
+      <point x="-56.625" y="96.0" />
+    </edge>
+    <edge source="com.ulfsvel.wallet.common.service.AesBasicWalletSecurityService" target="com.ulfsvel.wallet.common.service.WalletSecurityService">
+      <point x="0.0" y="-204.0" />
+      <point x="2046.5" y="212.0" />
+      <point x="1291.1249999999998" y="212.0" />
+      <point x="169.875" y="96.0" />
+    </edge>
+    <edge source="com.ulfsvel.wallet.common.service.PaperWalletSecurityService" target="com.ulfsvel.wallet.common.service.WalletSecurityService">
+      <point x="0.0" y="-107.0" />
+      <point x="226.5" y="212.0" />
+      <point x="951.3749999999998" y="212.0" />
+      <point x="-169.875" y="96.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.6539627544391512" x="1144.5" y="485.5" />
+  <SelectedNodes>
+    <node>com.ulfsvel.wallet.common.factory.WalletSecurityFactory</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

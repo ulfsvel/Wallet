@@ -4,11 +4,11 @@ import com.ulfsvel.wallet.btc.entity.*;
 import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
 import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.entity.WalletCredentials;
-import com.ulfsvel.wallet.common.enums.WalletSecurityType;
-import com.ulfsvel.wallet.common.enums.WalletType;
 import com.ulfsvel.wallet.common.factory.WalletSecurityFactory;
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.common.service.WalletSecurityService;
+import com.ulfsvel.wallet.common.types.WalletSecurityType;
+import com.ulfsvel.wallet.common.types.WalletType;
 import org.bitcoinj.core.Base58;
 import org.springframework.stereotype.Component;
 

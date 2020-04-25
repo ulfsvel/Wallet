@@ -1,0 +1,66 @@
+!define AWSPUML https://raw.githubusercontent.com/milo-minderbinder/AWS-PlantUML/release/18-2-22/dist
+!includeurl AWSPUML/common.puml
+!includeurl AWSPUML/Storage/AmazonS3/AmazonS3.puml
+!includeurl AWSPUML/Storage/AmazonS3/bucket/bucket.puml
+!includeurl AWSPUML/Messaging/AmazonSES/AmazonSES.puml
+!includeurl AWSPUML/NetworkingContentDelivery/AmazonRoute53/AmazonRoute53.puml
+!includeurl AWSPUML/NetworkingContentDelivery/AmazonVPC/AmazonVPC.puml
+!includeurl AWSPUML/NetworkingContentDelivery/AmazonCloudFront/AmazonCloudFront.puml
+!includeurl AWSPUML/Database/AmazonRDS/AmazonRDS.puml
+!includeurl AWSPUML/Database/AmazonRDS/MySQLDBinstance/MySQLDBinstance.puml
+!includeurl AWSPUML/Compute/AWSLambda/AWSLambda.puml
+!includeurl AWSPUML/Compute/AWSLambda/LambdaFunction/LambdaFunction.puml
+!includeurl AWSPUML/NetworkingContentDelivery/AmazonRoute53/AmazonRoute53.puml
+!includeurl AWSPUML/General/AWScloud/AWScloud.puml
+!includeurl AWSPUML/ApplicationServices/AmazonAPIGateway/AmazonAPIGateway.puml
+!includeurl AWSPUML/General/client/client.puml
+!includeurl AWSPUML/General/user/user.puml
+
+@startuml
+
+USER(user)
+CLIENT(browser)
+
+AWSCLOUD(aws) {
+
+    AMAZONROUTE53(route_53)
+
+    AMAZONAPIGATEWAY(api_gateway, "Backend")
+
+    AMAZONCLOUDFRONT(cloud_front, "Frontend")
+
+    AMAZONS3(s3) {
+        BUCKET(artifacts, "Backend and frontend artifacts")
+    }
+
+
+    AMAZONVPC(vpc){
+        AWSLAMBDA(lambda){
+            LAMBDAFUNCTION(lambda_backend, "Serverless API")
+        }
+
+        AMAZONRDS(rds){
+            MYSQLDBINSTANCE(db, "Backend database")
+        }
+    }
+
+    AMAZONSES(ses)
+
+}
+
+user - browser
+
+browser - route_53
+
+route_53 -d-> cloud_front
+route_53 -d-> api_gateway
+
+cloud_front -d-> artifacts
+
+api_gateway -d-> lambda_backend
+
+lambda_backend -d-> db
+lambda_backend -d-> artifacts
+lambda_backend -d-> ses
+
+@enduml

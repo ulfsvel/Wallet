@@ -4,10 +4,10 @@ import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
 import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.entity.WalletCredentials;
 import com.ulfsvel.wallet.common.entity.security.AesBasicSecurity;
-import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.common.repository.security.AesBasicSecurityRepository;
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
+import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ValidationException;

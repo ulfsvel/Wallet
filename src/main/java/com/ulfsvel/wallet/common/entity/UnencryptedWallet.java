@@ -1,7 +1,7 @@
 package com.ulfsvel.wallet.common.entity;
 
 
-import com.ulfsvel.wallet.common.enums.WalletType;
+import com.ulfsvel.wallet.common.types.WalletType;
 
 public class UnencryptedWallet {
 

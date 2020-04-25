@@ -1,7 +1,7 @@
 package com.ulfsvel.wallet.common.factory;
 
-import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.service.*;
+import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import org.springframework.stereotype.Component;
 
 @Component

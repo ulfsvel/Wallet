@@ -2,8 +2,8 @@ package com.ulfsvel.wallet.common.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ulfsvel.wallet.common.enums.WalletSecurityType;
-import com.ulfsvel.wallet.common.enums.WalletType;
+import com.ulfsvel.wallet.common.types.WalletSecurityType;
+import com.ulfsvel.wallet.common.types.WalletType;
 
 import javax.persistence.*;
 

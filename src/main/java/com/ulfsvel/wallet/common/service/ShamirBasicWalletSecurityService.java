@@ -7,11 +7,11 @@ import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
 import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.entity.WalletCredentials;
 import com.ulfsvel.wallet.common.entity.security.ShamirBasicSecurity;
-import com.ulfsvel.wallet.common.enums.WalletSecurityType;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.common.repository.security.ShamirBasicSecurityRepository;
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.common.service.SecureSecretStorage.SecureSecretStorage;
+import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;

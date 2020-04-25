@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.ulfsvel.shamir</OriginalElement>
+  <nodes>
+    <node x="514.2500000000001" y="526.0">com.ulfsvel.shamir.SecretsFactory</node>
+    <node x="1026.7908163265306" y="0.0">com.ulfsvel.shamir.Share</node>
+    <node x="890.0000000000001" y="250.0">com.ulfsvel.shamir.SecretGroup</node>
+    <node x="0.0" y="238.0">com.ulfsvel.shamir.MathHelper</node>
+    <node x="535.0000000000001" y="240.0">com.ulfsvel.shamir.BigNumbersGenerator</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.ulfsvel.shamir.SecretsFactory" target="com.ulfsvel.shamir.BigNumbersGenerator">
+      <point x="-83.71428571428572" y="-105.0" />
+      <point x="878.0357142857143" y="460.0" />
+      <point x="618.7500000000001" y="460.0" />
+      <point x="-83.75" y="94.0" />
+    </edge>
+    <edge source="com.ulfsvel.shamir.SecretsFactory" target="com.ulfsvel.shamir.SecretGroup">
+      <point x="41.85714285714283" y="-105.0" />
+      <point x="1003.6071428571429" y="450.0" />
+      <point x="1105.25" y="450.0" />
+      <point x="71.75" y="84.0" />
+    </edge>
+    <edge source="com.ulfsvel.shamir.SecretsFactory" target="com.ulfsvel.shamir.Share">
+      <point x="125.57142857142856" y="-105.0" />
+      <point x="1087.3214285714287" y="470.0" />
+      <point x="1198.5" y="470.0" />
+      <point x="1198.5" y="213.0" />
+      <point x="1200.9158163265306" y="213.0" />
+      <point x="74.625" y="94.0" />
+    </edge>
+    <edge source="com.ulfsvel.shamir.SecretGroup" target="com.ulfsvel.shamir.Share">
+      <point x="-71.75" y="-84.0" />
+      <point x="961.7500000000001" y="213.0" />
+      <point x="1051.6658163265306" y="213.0" />
+      <point x="-74.625" y="94.0" />
+    </edge>
+    <edge source="com.ulfsvel.shamir.SecretsFactory" target="com.ulfsvel.shamir.MathHelper">
+      <point x="-125.57142857142856" y="-105.0" />
+      <point x="836.1785714285716" y="470.0" />
+      <point x="257.5" y="470.0" />
+      <point x="0.0" y="96.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="620.0" y="350.0" />
+  <SelectedNodes>
+    <node>com.ulfsvel.shamir.SecretsFactory</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

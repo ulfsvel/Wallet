@@ -1,7 +1,7 @@
 package com.ulfsvel.wallet.common.repository;
 
 import com.ulfsvel.wallet.common.entity.Wallet;
-import com.ulfsvel.wallet.common.enums.WalletType;
+import com.ulfsvel.wallet.common.types.WalletType;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
