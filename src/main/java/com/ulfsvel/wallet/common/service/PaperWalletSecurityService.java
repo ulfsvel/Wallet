@@ -4,6 +4,7 @@ import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
 import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.entity.WalletCredentials;
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
+import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,12 +24,13 @@ public class PaperWalletSecurityService implements WalletSecurityService {
         return new WalletSecurityResponse(
                 new Wallet(unencryptedWallet)
                         .setEncryptedPrivateKey("")
+                        .setWalletSecurityType(WalletSecurityType.Paper)
         ).setData("privateKey", unencryptedWallet.getPrivateKey());
     }
 
     @Override
     public boolean areEncryptCredentialsValid(WalletCredentials walletCredentials) {
-        return false;
+        return true;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class PaperWalletSecurityService implements WalletSecurityService {
 
     @Override
     public boolean areRecoverCredentialsInvalid(WalletCredentials walletCredentials) {
-        return true;
+        return false;
     }
 
     @Override

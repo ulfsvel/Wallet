@@ -62,8 +62,12 @@ public class EthController {
                 new WalletCredentials(createWalletRequest.getCredentials()),
                 WalletSecurityType.valueOf(createWalletRequest.getSecurityType())
         );
-        walletSecurityResponse.getWallet().setUser(optionalUser.get());
+        User currentUser = optionalUser.get();
+        Wallet currentWallet = walletSecurityResponse.getWallet();
+        currentUser.addWallet(currentWallet);
+        currentWallet.setUser(currentUser);
         walletRepository.save(walletSecurityResponse.getWallet());
+        userRepository.save(optionalUser.get());
 
         return walletSecurityResponse;
     }
@@ -121,7 +125,12 @@ public class EthController {
         if (!walletOptional.isPresent()) {
             throw new RuntimeException("No walled identified by \"" + getBalanceRequest.getPublicAddress() + "\" can be found");
         }
-        return ethWalletService.getBalance(walletOptional.get());
+        Wallet wallet = walletOptional.get();
+        BigInteger balance = ethWalletService.getBalance(wallet);
+        wallet.setLastKnownBalance(balance.toString());
+        walletRepository.save(wallet);
+
+        return balance;
     }
 
     @PostMapping("transferFounds")

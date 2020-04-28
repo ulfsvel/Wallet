@@ -16,7 +16,7 @@ public class User {
     @Column(nullable = false)
     private String hashedPassword;
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wallet> walletList;
 
     public Long getId() {
@@ -37,5 +37,13 @@ public class User {
 
     public void setHashedPassword(String hashedPassword) {
         this.hashedPassword = hashedPassword;
+    }
+
+    public List<Wallet> getWalletList() {
+        return walletList;
+    }
+
+    public void addWallet(Wallet wallet) {
+        walletList.add(wallet);
     }
 }

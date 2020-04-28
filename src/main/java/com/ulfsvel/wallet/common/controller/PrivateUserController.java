@@ -1,13 +1,12 @@
 package com.ulfsvel.wallet.common.controller;
 
+import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.request.UpdateUserRequest;
 import com.ulfsvel.wallet.common.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 
 @RestController
@@ -27,6 +26,13 @@ public class PrivateUserController {
                 updateUserRequest.getEmail(),
                 updateUserRequest.getPassword()
         );
+    }
+
+    @GetMapping("getWallets")
+    public List<Wallet> getUser(Principal principal) {
+        return userService.getUser(
+                principal.getName()
+        ).getWalletList();
     }
 
 }

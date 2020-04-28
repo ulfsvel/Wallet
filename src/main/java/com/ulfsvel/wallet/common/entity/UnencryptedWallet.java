@@ -11,8 +11,10 @@ public class UnencryptedWallet {
     private String publicAddress;
     private WalletType walletType;
     private User user;
+    private final String lastKnownBalance;
 
     public UnencryptedWallet() {
+        lastKnownBalance = "0";
     }
 
     public UnencryptedWallet(Wallet wallet, String decryptedPrivateKey) {
@@ -22,6 +24,7 @@ public class UnencryptedWallet {
         publicAddress = wallet.getPublicAddress();
         walletType = wallet.getWalletType();
         user = wallet.getUser();
+        lastKnownBalance = wallet.getLastKnownBalance();
     }
 
     public long getId() {
@@ -75,5 +78,9 @@ public class UnencryptedWallet {
     public UnencryptedWallet setWalletType(WalletType walletType) {
         this.walletType = walletType;
         return this;
+    }
+
+    public String getLastKnownBalance() {
+        return lastKnownBalance;
     }
 }

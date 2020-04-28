@@ -55,8 +55,12 @@ public class BtcController {
                 new WalletCredentials(createWalletRequest.getCredentials()),
                 WalletSecurityType.valueOf(createWalletRequest.getSecurityType())
         );
-        walletSecurityResponse.getWallet().setUser(optionalUser.get());
+        User currentUser = optionalUser.get();
+        Wallet currentWallet = walletSecurityResponse.getWallet();
+        currentUser.addWallet(currentWallet);
+        currentWallet.setUser(currentUser);
         walletRepository.save(walletSecurityResponse.getWallet());
+        userRepository.save(optionalUser.get());
 
         return walletSecurityResponse;
     }

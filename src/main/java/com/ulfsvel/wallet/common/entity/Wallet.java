@@ -22,11 +22,15 @@ public class Wallet {
     private WalletSecurityType walletSecurityType;
     private WalletType walletType;
 
+    @Column(nullable = false)
+    private String lastKnownBalance;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     public Wallet() {
+        lastKnownBalance = "0";
     }
 
     public Wallet(UnencryptedWallet wallet) {
@@ -35,6 +39,7 @@ public class Wallet {
         publicAddress = wallet.getPublicAddress();
         walletType = wallet.getWalletType();
         user = wallet.getUser();
+        lastKnownBalance = wallet.getLastKnownBalance();
     }
 
     public Long getId() {
@@ -92,5 +97,14 @@ public class Wallet {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getLastKnownBalance() {
+        return lastKnownBalance;
+    }
+
+    public Wallet setLastKnownBalance(String lastKnownBalance) {
+        this.lastKnownBalance = lastKnownBalance;
+        return this;
     }
 }

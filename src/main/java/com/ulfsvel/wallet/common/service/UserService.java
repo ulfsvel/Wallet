@@ -98,4 +98,13 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    public User getUser(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (!userOptional.isPresent()) {
+            throw new UsernameNotFoundException(email);
+        }
+
+        return userOptional.get();
+    }
 }

@@ -15,29 +15,5 @@ services:
         ports:
             - 3306:3306
 
-#    geth:
-#        image: ethereum/client-go:v1.9.11
-#        container_name: wallet-eth-server
-#        volumes:
-#            - geth:/root/.ethereum
-#            - ./docker/geth/:/root/geth-config/
-#        command:
-#            --rpcapi "personal,db,eth,net,web3"
-#            --rpc
-#            --rpcaddr "127.0.0.1"
-#            --rpcport "8545"
-#            --rpcaddr "0.0.0.0"
-#            --rpccorsdomain "*"
-#            --nodiscover
-#            --networkid "4224"
-#            --mine
-#            --minerthreads 1
-#            --etherbase "0x26d66498c84a9c93b77552c27ca28f1dbf701cdb"
-#        #init "/root/geth-config/genesis.json"
-#        ports:
-#            - 30303:30303
-#            - 8545:8545
-
 volumes:
     mariadb:
-#    geth:
