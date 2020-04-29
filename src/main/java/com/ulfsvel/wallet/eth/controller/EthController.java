@@ -5,6 +5,7 @@ import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.entity.WalletCredentials;
 import com.ulfsvel.wallet.common.repository.UserRepository;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
+import com.ulfsvel.wallet.common.response.WalletBalanceResponse;
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import com.ulfsvel.wallet.common.types.WalletType;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -114,7 +114,7 @@ public class EthController {
     }
 
     @PostMapping("getWalletBalance")
-    public BigInteger getAccountBalance(
+    public WalletBalanceResponse getAccountBalance(
             @RequestBody GetBalanceRequest getBalanceRequest,
             Principal principal
     ) throws IOException {
@@ -126,11 +126,11 @@ public class EthController {
             throw new RuntimeException("No walled identified by \"" + getBalanceRequest.getPublicAddress() + "\" can be found");
         }
         Wallet wallet = walletOptional.get();
-        BigInteger balance = ethWalletService.getBalance(wallet);
-        wallet.setLastKnownBalance(balance.toString());
+        String balance = ethWalletService.getBalance(wallet).toString();
+        wallet.setLastKnownBalance(balance);
         walletRepository.save(wallet);
 
-        return balance;
+        return new WalletBalanceResponse(balance);
     }
 
     @PostMapping("transferFounds")

@@ -6,6 +6,7 @@ import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.entity.WalletCredentials;
 import com.ulfsvel.wallet.common.repository.UserRepository;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
+import com.ulfsvel.wallet.common.response.WalletBalanceResponse;
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import com.ulfsvel.wallet.common.types.WalletType;
@@ -107,7 +108,7 @@ public class BtcController {
     }
 
     @PostMapping("getWalletBalance")
-    public String getAccountBalance(
+    public WalletBalanceResponse getAccountBalance(
             @RequestBody GetBalanceRequest getBalanceRequest,
             Principal principal
     ) throws IOException {
@@ -118,7 +119,12 @@ public class BtcController {
         if (!walletOptional.isPresent()) {
             throw new RuntimeException("No walled identified by \"" + getBalanceRequest.getPublicAddress() + "\" can be found");
         }
-        return btcWalletService.getBalance(walletOptional.get());
+        Wallet wallet = walletOptional.get();
+        String balance = btcWalletService.getBalance(wallet);
+        wallet.setLastKnownBalance(balance);
+        walletRepository.save(wallet);
+
+        return new WalletBalanceResponse(balance);
     }
 
     @PostMapping("transferFounds")
