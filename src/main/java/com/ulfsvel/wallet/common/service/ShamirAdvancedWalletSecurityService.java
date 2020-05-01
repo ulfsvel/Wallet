@@ -13,6 +13,7 @@ import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,8 +80,13 @@ public class ShamirAdvancedWalletSecurityService implements WalletSecurityServic
 
         shamirAdvancedSecurityRepository.save(shamirAdvancedSecurity);
 
+        List<String> shares = new LinkedList<>();
+        for (Share share : secretGroup.getShares()) {
+            shares.add(share.toString());
+        }
+
         return new WalletSecurityResponse(wallet)
-                .setData("shares", secretGroup.getShares())
+                .setData("shares", shares)
                 .setData("sharesToRebuild", secretGroup.getSharesToRebuild())
                 .setData("totalShares", secretGroup.getTotalShares());
     }
@@ -93,6 +99,7 @@ public class ShamirAdvancedWalletSecurityService implements WalletSecurityServic
         if (!walletCredentials.containsKey("totalShares")) {
             return false;
         }
+
         return walletCredentials.get("sharesToRebuild") instanceof Integer && walletCredentials.get("totalShares") instanceof Integer;
     }
 

@@ -3,12 +3,20 @@ package com.ulfsvel.wallet.common.service;
 import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
 import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.entity.WalletCredentials;
+import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PaperWalletSecurityService implements WalletSecurityService {
+
+    private final WalletRepository walletRepository;
+
+    public PaperWalletSecurityService(WalletRepository walletRepository) {
+        this.walletRepository = walletRepository;
+    }
+
     @Override
     public UnencryptedWallet decryptWallet(Wallet wallet, WalletCredentials walletCredentials) {
         return new UnencryptedWallet(wallet, getPrivateKeyFromCredentials(walletCredentials));
@@ -22,9 +30,11 @@ public class PaperWalletSecurityService implements WalletSecurityService {
     @Override
     public WalletSecurityResponse encryptWallet(UnencryptedWallet unencryptedWallet, WalletCredentials walletCredentials) {
         return new WalletSecurityResponse(
-                new Wallet(unencryptedWallet)
-                        .setEncryptedPrivateKey("")
-                        .setWalletSecurityType(WalletSecurityType.Paper)
+                walletRepository.save(
+                        new Wallet(unencryptedWallet)
+                                .setEncryptedPrivateKey("")
+                                .setWalletSecurityType(WalletSecurityType.Paper)
+                )
         ).setData("privateKey", unencryptedWallet.getPrivateKey());
     }
 
