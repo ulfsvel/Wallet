@@ -8,6 +8,7 @@ import com.ulfsvel.wallet.common.repository.UserRepository;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.common.response.WalletBalanceResponse;
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
+import com.ulfsvel.wallet.common.response.WalletTransactionResponse;
 import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import com.ulfsvel.wallet.common.types.WalletType;
 import com.ulfsvel.wallet.eth.request.*;
@@ -128,7 +129,7 @@ public class BtcController {
     }
 
     @PostMapping("transferFounds")
-    public String transferBalance(
+    public WalletTransactionResponse transferBalance(
             @RequestBody TransferFoundsRequest transferFoundsRequest,
             Principal principal
     ) throws Exception {
@@ -139,26 +140,15 @@ public class BtcController {
         if (!walletOptional.isPresent()) {
             throw new RuntimeException("No walled identified by \"" + transferFoundsRequest.getPublicAddress() + "\" can be found");
         }
-        return btcWalletService.unlockAndTransferFounds(
-                walletOptional.get(),
-                new WalletCredentials(transferFoundsRequest.getCredentials()),
-                transferFoundsRequest.getTo(),
-                Double.parseDouble(transferFoundsRequest.getAmount())
+        return new WalletTransactionResponse(
+                btcWalletService.unlockAndTransferFounds(
+                        walletOptional.get(),
+                        new WalletCredentials(transferFoundsRequest.getCredentials()),
+                        transferFoundsRequest.getTo(),
+                        Double.parseDouble(transferFoundsRequest.getAmount())
+                )
         );
     }
-
-//    @PostMapping("getWalletTransactions")
-//    public List<EthTransaction> getTransaction(
-//            @RequestBody GetTransactionsRequest getTransactionsRequest,
-//            Principal principal
-//    ) {
-//        return ethTransactionRepository.findAllByWalletPublicAddressAndWalletUserEmail(
-//                getTransactionsRequest.getPublicAddress(),
-//                principal.getName()
-//        );
-//
-//        return new LinkedList<>();
-//    }
 
     @PostMapping("getWallets")
     public List<Wallet> getWallets(Principal principal) {

@@ -7,10 +7,9 @@ import com.ulfsvel.wallet.common.repository.UserRepository;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.common.response.WalletBalanceResponse;
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
+import com.ulfsvel.wallet.common.response.WalletTransactionResponse;
 import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import com.ulfsvel.wallet.common.types.WalletType;
-import com.ulfsvel.wallet.eth.entity.EthTransaction;
-import com.ulfsvel.wallet.eth.repository.EthTransactionRepository;
 import com.ulfsvel.wallet.eth.request.*;
 import com.ulfsvel.wallet.eth.service.EthWalletService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,14 +36,11 @@ public class EthController {
 
     private final EthWalletService ethWalletService;
 
-    private final EthTransactionRepository ethTransactionRepository;
-
     private final UserRepository userRepository;
 
-    public EthController(WalletRepository walletRepository, EthWalletService ethWalletService, EthTransactionRepository ethTransactionRepository, UserRepository userRepository) {
+    public EthController(WalletRepository walletRepository, EthWalletService ethWalletService, UserRepository userRepository) {
         this.walletRepository = walletRepository;
         this.ethWalletService = ethWalletService;
-        this.ethTransactionRepository = ethTransactionRepository;
         this.userRepository = userRepository;
     }
 
@@ -134,7 +130,7 @@ public class EthController {
     }
 
     @PostMapping("transferFounds")
-    public EthTransaction transferBalance(
+    public WalletTransactionResponse transferBalance(
             @RequestBody TransferFoundsRequest transferFoundsRequest,
             Principal principal
     ) throws Exception {
@@ -145,23 +141,12 @@ public class EthController {
         if (!walletOptional.isPresent()) {
             throw new RuntimeException("No walled identified by \"" + transferFoundsRequest.getPublicAddress() + "\" can be found");
         }
-        return ethWalletService.unlockAndTransferFounds(
+        return new WalletTransactionResponse(ethWalletService.unlockAndTransferFounds(
                 walletOptional.get(),
                 new WalletCredentials(transferFoundsRequest.getCredentials()),
                 transferFoundsRequest.getTo(),
                 new BigDecimal(transferFoundsRequest.getAmount())
-        );
-    }
-
-    @PostMapping("getWalletTransactions")
-    public List<EthTransaction> getTransaction(
-            @RequestBody GetTransactionsRequest getTransactionsRequest,
-            Principal principal
-    ) {
-        return ethTransactionRepository.findAllByWalletPublicAddressAndWalletUserEmail(
-                getTransactionsRequest.getPublicAddress(),
-                principal.getName()
-        );
+        ));
     }
 
     @PostMapping("getWallets")
