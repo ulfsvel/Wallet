@@ -1,5 +1,6 @@
 package com.ulfsvel.wallet.btc.service;
 
+import com.ulfsvel.wallet.btc.config.BitcoinSettings;
 import com.ulfsvel.wallet.btc.entity.*;
 import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
 import com.ulfsvel.wallet.common.entity.Wallet;
@@ -13,7 +14,6 @@ import org.bitcoinj.core.Base58;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
@@ -27,9 +27,12 @@ public class BtcWalletService {
 
     private final BitcoindJsonRpcService bitcoindJsonRpcService;
 
-    public BtcWalletService(WalletSecurityFactory walletSecurityFactory, BitcoindJsonRpcService bitcoindJsonRpcService) {
+    private final BitcoinSettings bitcoinSettings;
+
+    public BtcWalletService(WalletSecurityFactory walletSecurityFactory, BitcoindJsonRpcService bitcoindJsonRpcService, BitcoinSettings bitcoinSettings) {
         this.walletSecurityFactory = walletSecurityFactory;
         this.bitcoindJsonRpcService = bitcoindJsonRpcService;
+        this.bitcoinSettings = bitcoinSettings;
     }
 
     /**
@@ -71,11 +74,11 @@ public class BtcWalletService {
 
 
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
-        byte[] firstSha256 = sha.digest(bitcoinPublicKey.getBytes(StandardCharsets.UTF_8));
+        byte[] firstSha256 = sha.digest();
         MessageDigest rmd = MessageDigest.getInstance("RipeMD160", "BC");
         byte[] ripeMd160 = rmd.digest(firstSha256);
         byte[] adjustedRipeMd160 = new byte[ripeMd160.length + 1];
-        adjustedRipeMd160[0] = 0;
+        adjustedRipeMd160[0] = bitcoinSettings.isTestnet() ? (byte) 0x6f : 0;
         System.arraycopy(ripeMd160, 0, adjustedRipeMd160, 1, ripeMd160.length);
         byte[] secondSha256 = sha.digest(adjustedRipeMd160);
         byte[] thirdSha256 = sha.digest(secondSha256);
@@ -85,8 +88,8 @@ public class BtcWalletService {
 
 
         return new UnencryptedWallet()
-                .setPrivateKey(Base58.encode(bitcoinPrivateKey.getBytes(StandardCharsets.UTF_8)))
-                .setPublicKey(Base58.encode(bitcoinPublicKey.getBytes(StandardCharsets.UTF_8)))
+                .setPrivateKey(bitcoinPrivateKey)
+                .setPublicKey(bitcoinPublicKey)
                 .setPublicAddress(Base58.encode(bitcoinPublicAddress))
                 .setWalletType(WalletType.BTC);
     }
