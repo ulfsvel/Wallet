@@ -6,5 +6,5 @@ spring.datasource.username=user
 spring.datasource.password=password
 
 web3j.endpoint=https://ropsten.infura.io/v3/82168e935ed0440d808e54afd21cea46
-bitcoind.endpoint=http://192.1168.100.164:8332/
+bitcoind.endpoint=http://192.168.100.164:8332/
 bitcoind.isTestnet=true

@@ -1,5 +1,6 @@
 package com.ulfsvel.wallet.btc.service;
 
+import com.nimbusds.jose.util.StandardCharset;
 import com.ulfsvel.wallet.btc.config.BitcoinSettings;
 import com.ulfsvel.wallet.btc.entity.*;
 import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
@@ -74,7 +75,7 @@ public class BtcWalletService {
 
 
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
-        byte[] firstSha256 = sha.digest();
+        byte[] firstSha256 = sha.digest(bitcoinPublicKey.getBytes(StandardCharset.UTF_8));
         MessageDigest rmd = MessageDigest.getInstance("RipeMD160", "BC");
         byte[] ripeMd160 = rmd.digest(firstSha256);
         byte[] adjustedRipeMd160 = new byte[ripeMd160.length + 1];
@@ -84,7 +85,7 @@ public class BtcWalletService {
         byte[] thirdSha256 = sha.digest(secondSha256);
         byte[] bitcoinPublicAddress = new byte[25];
         System.arraycopy(adjustedRipeMd160, 0, bitcoinPublicAddress, 0, adjustedRipeMd160.length);
-        System.arraycopy(thirdSha256, 0, bitcoinPublicAddress, 20, 5);
+        System.arraycopy(thirdSha256, 0, bitcoinPublicAddress, 21, 4);
 
 
         return new UnencryptedWallet()
