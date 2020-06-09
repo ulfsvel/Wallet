@@ -122,7 +122,7 @@ public class EthController {
             throw new RuntimeException("No walled identified by \"" + getBalanceRequest.getPublicAddress() + "\" can be found");
         }
         Wallet wallet = walletOptional.get();
-        String balance = ethWalletService.getBalance(wallet).toString();
+        String balance = ethWalletService.getBalance(wallet);
         wallet.setLastKnownBalance(balance);
         walletRepository.save(wallet);
 

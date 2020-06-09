@@ -3,11 +3,13 @@ package com.ulfsvel.wallet.btc.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ulfsvel.wallet.btc.entity.*;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -19,7 +21,7 @@ public class BitcoindJsonRpcService {
 
     private static final String SIGN_RAW_TRANSACTION_METHOD = "signrawtransactionwithkey";
 
-    private static final String GET_BALANCE_METHOD = "getreceivedbyaddress";
+    private static final String GET_BALANCE_METHOD = "listunspent";
 
     private static final String DECODE_TRANSACTION_METHOD = "decoderawtransaction";
 
@@ -29,11 +31,16 @@ public class BitcoindJsonRpcService {
 
     private final ObjectMapper objectMapper;
 
-    public BitcoindJsonRpcService(String endpoint, ObjectMapper objectMapper) {
+    public BitcoindJsonRpcService(String endpoint, String auth, ObjectMapper objectMapper) {
         this.endpoint = endpoint;
         this.objectMapper = objectMapper;
         this.headers = new HttpHeaders();
         this.headers.setContentType(MediaType.APPLICATION_JSON);
+
+        byte[] encodedAuth = Base64.encodeBase64(
+                auth.getBytes(StandardCharsets.US_ASCII));
+        String authHeader = "Basic " + new String(encodedAuth);
+        this.headers.set("Authorization", authHeader);
     }
 
     private RestTemplate createClient() {
@@ -79,7 +86,7 @@ public class BitcoindJsonRpcService {
     }
 
     public String decodeTransaction(DecodeTransaction decodeTransaction) throws JsonProcessingException {
-        return callMethod(DECODE_TRANSACTION_METHOD, decodeTransaction, GetBalanceResult.class).getResult();
+        return callMethod(DECODE_TRANSACTION_METHOD, decodeTransaction, String.class);
     }
 
 }

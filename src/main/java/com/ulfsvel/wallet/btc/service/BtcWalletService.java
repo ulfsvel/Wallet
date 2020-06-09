@@ -20,6 +20,7 @@ import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.ECPoint;
+import java.util.List;
 
 @Component
 public class BtcWalletService {
@@ -163,11 +164,20 @@ public class BtcWalletService {
     }
 
     public String getBalance(Wallet wallet) throws IOException {
-        return bitcoindJsonRpcService.getBalance(
+        List<UnspentTx> result = bitcoindJsonRpcService.getBalance(
                 new GetBalance()
-                        .setAddress(wallet.getPublicAddress())
-                        .setConfirmations(1)
+                        .addAddresses(wallet.getPublicAddress())
+                        .setMinconf(1)
         ).getResult();
+
+        Double balance = 0D;
+        for (UnspentTx unspentTx : result) {
+            if (unspentTx.getSafe()) {
+                balance += unspentTx.getAmount();
+            }
+        }
+
+        return balance.toString();
     }
 
     private String transferFounds(UnencryptedWallet wallet, String to, Double amount) throws Exception {

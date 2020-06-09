@@ -9,10 +9,12 @@ public class FoundTransaction {
 
     private String hexString;
 
-    private Map<String, String> options;
+    private final Map<String, Object> options;
 
     public FoundTransaction() {
         this.options = new TreeMap<>();
+        options.put("includeWatching", Boolean.TRUE);
+        options.put("estimate_mode", "ECONOMICAL");
     }
 
     @JsonProperty("hexstring")
@@ -26,7 +28,7 @@ public class FoundTransaction {
     }
 
     @JsonProperty("options")
-    public Map<String, String> getOptions() {
+    public Map<String, Object> getOptions() {
         return options;
     }
 

@@ -13,7 +13,12 @@
     {
       "name": "bitcoind.isTestnet",
       "type": "java.lang.Boolean",
-      "description": "Description for bitcoind.isTestnet."
+      "description": "True for testnet."
+    },
+    {
+      "name": "bitcoind.auth",
+      "type": "java.lang.String",
+      "description": "Auth string."
     }
   ]
 }

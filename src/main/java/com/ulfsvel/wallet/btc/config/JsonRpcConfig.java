@@ -11,8 +11,12 @@ import org.springframework.context.annotation.Configuration;
 public class JsonRpcConfig {
 
     private final ObjectMapper objectMapper;
-    @Value("${bitcoind.endpoint:http://localhost:8332/}")
+
+    @Value("${bitcoind.endpoint:http://127.0.0.1:8332/}")
     private String endpoint;
+
+    @Value("${bitcoind.auth:bitcoin:admin}")
+    private String auth;
 
     public JsonRpcConfig(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -20,6 +24,6 @@ public class JsonRpcConfig {
 
     @Bean
     public BitcoindJsonRpcService bitcoindJsonRpcService() {
-        return new BitcoindJsonRpcService(endpoint, objectMapper);
+        return new BitcoindJsonRpcService(endpoint, auth, objectMapper);
     }
 }

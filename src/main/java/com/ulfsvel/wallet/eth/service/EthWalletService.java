@@ -120,16 +120,16 @@ public class EthWalletService {
         return transferFounds(credentials, to, amount);
     }
 
-    public BigInteger getBalance(Wallet wallet) throws IOException {
+    public String getBalance(Wallet wallet) throws IOException {
         EthGetBalance ethGetBalance = web3j
                 .ethGetBalance(wallet.getPublicAddress(), DefaultBlockParameterName.LATEST)
                 .send();
 
-        return ethGetBalance.getBalance();
+        return Convert.fromWei(ethGetBalance.getBalance().toString(), Convert.Unit.ETHER).toString();
     }
 
     private String transferFounds(Credentials credentials, String to, BigDecimal amount) throws Exception {
-        TransactionReceipt transactionReceipt = Transfer.sendFunds(web3j, credentials, to, amount, Convert.Unit.WEI).send();
+        TransactionReceipt transactionReceipt = Transfer.sendFunds(web3j, credentials, to, amount, Convert.Unit.ETHER).send();
         if (!transactionReceipt.isStatusOK()) {
             throw new RuntimeException("Transaction failed");
         }
