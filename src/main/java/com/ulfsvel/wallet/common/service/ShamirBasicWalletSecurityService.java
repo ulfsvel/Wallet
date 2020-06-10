@@ -3,10 +3,12 @@ package com.ulfsvel.wallet.common.service;
 import com.ulfsvel.shamir.SecretGroup;
 import com.ulfsvel.shamir.SecretsFactory;
 import com.ulfsvel.shamir.Share;
+import com.ulfsvel.wallet.common.entity.PasswordResetToken;
 import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
 import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.entity.WalletCredentials;
 import com.ulfsvel.wallet.common.entity.security.ShamirBasicSecurity;
+import com.ulfsvel.wallet.common.repository.PasswordResetTokenRepository;
 import com.ulfsvel.wallet.common.repository.WalletRepository;
 import com.ulfsvel.wallet.common.repository.security.ShamirBasicSecurityRepository;
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
@@ -14,6 +16,8 @@ import com.ulfsvel.wallet.common.service.SecureSecretStorage.SecureSecretStorage
 import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import org.springframework.stereotype.Component;
 
+import javax.validation.ValidationException;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +33,14 @@ public class ShamirBasicWalletSecurityService implements WalletSecurityService {
 
     private final SecureSecretStorage secureSecretStorage;
 
-    public ShamirBasicWalletSecurityService(WalletRepository walletRepository, ShamirBasicSecurityRepository shamirBasicSecurityRepository, SecretsFactory secretsFactory, SecureSecretStorage secureSecretStorage) {
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+
+    public ShamirBasicWalletSecurityService(WalletRepository walletRepository, ShamirBasicSecurityRepository shamirBasicSecurityRepository, SecretsFactory secretsFactory, SecureSecretStorage secureSecretStorage, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.walletRepository = walletRepository;
         this.shamirBasicSecurityRepository = shamirBasicSecurityRepository;
         this.secretsFactory = secretsFactory;
         this.secureSecretStorage = secureSecretStorage;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
     public UnencryptedWallet decryptWallet(Wallet wallet, String password) {
@@ -119,6 +126,23 @@ public class ShamirBasicWalletSecurityService implements WalletSecurityService {
 
     @Override
     public UnencryptedWallet recoverWallet(Wallet wallet, WalletCredentials walletCredentials) {
+        Optional<PasswordResetToken> optionalPasswordResetToken = passwordResetTokenRepository.findByToken(getTokenFromCredentials(walletCredentials));
+        if (!optionalPasswordResetToken.isPresent()) {
+            throw new ValidationException("Token not found.");
+        }
+
+        PasswordResetToken passwordResetToken = optionalPasswordResetToken.get();
+        Calendar cal = Calendar.getInstance();
+        if ((passwordResetToken.getExpiryDate()
+                .getTime() - cal.getTime()
+                .getTime()) <= 0) {
+            throw new ValidationException("Confirm token is expired.");
+        }
+
+        if (!passwordResetToken.getUser().getId().equals(wallet.getUser().getId())) {
+            throw new ValidationException("Invalid token for user");
+        }
+
         return recoverWallet(wallet);
     }
 
@@ -139,7 +163,11 @@ public class ShamirBasicWalletSecurityService implements WalletSecurityService {
 
     @Override
     public boolean areRecoverCredentialsInvalid(WalletCredentials walletCredentials) {
-        return false;
+        if (!walletCredentials.containsKey("confirmationCode")) {
+            return true;
+        }
+
+        return !(walletCredentials.get("confirmationCode") instanceof String);
     }
 
     @Override
@@ -164,5 +192,9 @@ public class ShamirBasicWalletSecurityService implements WalletSecurityService {
 
     private String getPasswordFromCredentials(WalletCredentials walletCredentials) {
         return (String) walletCredentials.get("password");
+    }
+
+    private String getTokenFromCredentials(WalletCredentials walletCredentials) {
+        return (String) walletCredentials.get("confirmationCode");
     }
 }

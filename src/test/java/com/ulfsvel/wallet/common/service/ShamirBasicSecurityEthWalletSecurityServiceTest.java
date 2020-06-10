@@ -43,8 +43,8 @@ public class ShamirBasicSecurityEthWalletSecurityServiceTest {
                 getWalletRepository(),
                 getShamirBasicSecurityRepository(),
                 getSecretsFactory(),
-                getSecureSecretStorage()
-        );
+                getSecureSecretStorage(),
+                null);
     }
 
     private ShamirBasicSecurityRepository getShamirBasicSecurityRepository() {

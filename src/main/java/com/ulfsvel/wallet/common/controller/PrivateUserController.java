@@ -1,7 +1,9 @@
 package com.ulfsvel.wallet.common.controller;
 
+import com.ulfsvel.wallet.common.entity.PasswordResetToken;
 import com.ulfsvel.wallet.common.entity.Wallet;
 import com.ulfsvel.wallet.common.request.UpdateUserRequest;
+import com.ulfsvel.wallet.common.service.MessageService;
 import com.ulfsvel.wallet.common.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +17,11 @@ public class PrivateUserController {
 
     private final UserService userService;
 
-    public PrivateUserController(UserService userService) {
+    private final MessageService messageService;
+
+    public PrivateUserController(UserService userService, MessageService messageService) {
         this.userService = userService;
+        this.messageService = messageService;
     }
 
     @PostMapping("update")
@@ -25,6 +30,16 @@ public class PrivateUserController {
                 principal.getName(),
                 updateUserRequest.getEmail(),
                 updateUserRequest.getPassword()
+        );
+    }
+
+    @PostMapping("requestConfirmToken")
+    public void requestConfirmToken(Principal principal) {
+        PasswordResetToken passwordResetToken = userService.createResetToken(
+                principal.getName()
+        );
+        messageService.sendResetTokenMessage(
+                passwordResetToken
         );
     }
 
