@@ -10,7 +10,7 @@ import java.util.TreeMap;
 public class CreateTransaction {
 
     private final static String DATA_KEY = "data";
-    private final List<Object> inputList;
+    private List<UnspentTxForFounding> inputList;
     private Map<String, String> outputList;
     private Long lockTime;
     private Boolean replaceable;
@@ -23,8 +23,13 @@ public class CreateTransaction {
     }
 
     @JsonProperty("inputs")
-    public List<Object> getInputList() {
+    public List<UnspentTxForFounding> getInputList() {
         return inputList;
+    }
+
+    public CreateTransaction setInputList(List<UnspentTxForFounding> inputList) {
+        this.inputList = inputList;
+        return this;
     }
 
     @JsonProperty("outputs")
@@ -39,6 +44,11 @@ public class CreateTransaction {
 
     public CreateTransaction putOutput(String address, String amount) {
         this.outputList.put(address, amount);
+        return this;
+    }
+
+    public CreateTransaction putInput(UnspentTxForFounding unspentTxForFounding) {
+        this.inputList.add(unspentTxForFounding);
         return this;
     }
 

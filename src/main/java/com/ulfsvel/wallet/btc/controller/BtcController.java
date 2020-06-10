@@ -1,5 +1,6 @@
 package com.ulfsvel.wallet.btc.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ulfsvel.wallet.btc.service.BtcWalletService;
 import com.ulfsvel.wallet.common.entity.User;
 import com.ulfsvel.wallet.common.entity.Wallet;
@@ -47,7 +48,7 @@ public class BtcController {
     public WalletSecurityResponse createWallet(
             @RequestBody CreateWalletRequest createWalletRequest,
             Principal principal
-    ) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, ValidationException {
+    ) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, ValidationException, JsonProcessingException {
         Optional<User> optionalUser = userRepository.findByEmail(principal.getName());
         if (!optionalUser.isPresent()) {
             throw new ValidationException("User does not exist.");
@@ -61,7 +62,9 @@ public class BtcController {
         Wallet currentWallet = walletSecurityResponse.getWallet();
         currentUser.addWallet(currentWallet);
         currentWallet.setUser(currentUser);
-        walletRepository.save(walletSecurityResponse.getWallet());
+        walletRepository.save(currentWallet);
+        currentWallet = btcWalletService.importWalletIntoNode(currentWallet);
+        walletRepository.save(currentWallet);
         userRepository.save(optionalUser.get());
 
         return walletSecurityResponse;
@@ -145,7 +148,7 @@ public class BtcController {
                         walletOptional.get(),
                         new WalletCredentials(transferFoundsRequest.getCredentials()),
                         transferFoundsRequest.getTo(),
-                        Double.parseDouble(transferFoundsRequest.getAmount())
+                        transferFoundsRequest.getAmount()
                 )
         );
     }

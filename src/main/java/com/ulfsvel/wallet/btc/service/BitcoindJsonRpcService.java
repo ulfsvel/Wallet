@@ -25,6 +25,10 @@ public class BitcoindJsonRpcService {
 
     private static final String DECODE_TRANSACTION_METHOD = "decoderawtransaction";
 
+    private static final String IMPORT_KEY_METHOD = "importpubkey";
+
+    private static final String GET_ADDRESS_METHOD = "getaddressesbylabel";
+
     private final String endpoint;
 
     private final HttpHeaders headers;
@@ -87,6 +91,14 @@ public class BitcoindJsonRpcService {
 
     public String decodeTransaction(DecodeTransaction decodeTransaction) throws JsonProcessingException {
         return callMethod(DECODE_TRANSACTION_METHOD, decodeTransaction, String.class);
+    }
+
+    public void importPublicKey(ImportPublicKey importPublicKey) throws JsonProcessingException {
+        callMethod(IMPORT_KEY_METHOD, importPublicKey, String.class);
+    }
+
+    public GetAddressResult getAddressesByLabel(GetAddress getAddress) throws JsonProcessingException {
+        return callMethod(GET_ADDRESS_METHOD, getAddress, GetAddressResult.class);
     }
 
 }
