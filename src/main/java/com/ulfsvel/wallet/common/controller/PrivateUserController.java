@@ -39,6 +39,7 @@ public class PrivateUserController {
                 principal.getName()
         );
         messageService.sendResetTokenMessage(
+                principal.getName(),
                 passwordResetToken
         );
     }

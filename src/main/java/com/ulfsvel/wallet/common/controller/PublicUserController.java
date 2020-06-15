@@ -40,6 +40,7 @@ public class PublicUserController {
                 passwordResetTokenRequest.getEmail()
         );
         messageService.sendResetTokenMessage(
+                passwordResetTokenRequest.getEmail(),
                 passwordResetToken
         );
     }

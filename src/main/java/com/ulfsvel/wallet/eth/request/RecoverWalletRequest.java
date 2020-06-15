@@ -1,7 +1,5 @@
 package com.ulfsvel.wallet.eth.request;
 
-import com.ulfsvel.wallet.common.entity.WalletCredentials;
-
 import java.util.Map;
 
 public class RecoverWalletRequest {
@@ -30,11 +28,12 @@ public class RecoverWalletRequest {
         this.recoverCredentials = recoverCredentials;
     }
 
+
     public Map<String, Object> getNewCredentials() {
         return newCredentials;
     }
 
-    public void setNewCredentials(WalletCredentials newCredentials) {
+    public void setNewCredentials(Map<String, Object> newCredentials) {
         this.newCredentials = newCredentials;
     }
 
