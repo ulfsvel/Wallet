@@ -62,8 +62,8 @@ public class EthController {
         Wallet currentWallet = walletSecurityResponse.getWallet();
         currentUser.addWallet(currentWallet);
         currentWallet.setUser(currentUser);
+        userRepository.save(currentUser);
         walletRepository.save(walletSecurityResponse.getWallet());
-        userRepository.save(optionalUser.get());
 
         return walletSecurityResponse;
     }

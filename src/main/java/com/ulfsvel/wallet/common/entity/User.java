@@ -16,7 +16,7 @@ public class User {
     @Column(nullable = false)
     private String hashedPassword;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wallet> walletList;
 
     public Long getId() {

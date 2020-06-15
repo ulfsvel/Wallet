@@ -14,6 +14,7 @@ import com.ulfsvel.wallet.common.repository.security.ShamirBasicSecurityReposito
 import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.common.service.SecureSecretStorage.SecureSecretStorage;
 import com.ulfsvel.wallet.common.types.WalletSecurityType;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ValidationException;
@@ -35,7 +36,11 @@ public class ShamirBasicWalletSecurityService implements WalletSecurityService {
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public ShamirBasicWalletSecurityService(WalletRepository walletRepository, ShamirBasicSecurityRepository shamirBasicSecurityRepository, SecretsFactory secretsFactory, SecureSecretStorage secureSecretStorage, PasswordResetTokenRepository passwordResetTokenRepository) {
+    public ShamirBasicWalletSecurityService(WalletRepository walletRepository,
+                                            ShamirBasicSecurityRepository shamirBasicSecurityRepository,
+                                            SecretsFactory secretsFactory,
+                                            @Qualifier("cloudSecureSecretStorage") SecureSecretStorage secureSecretStorage,
+                                            PasswordResetTokenRepository passwordResetTokenRepository) {
         this.walletRepository = walletRepository;
         this.shamirBasicSecurityRepository = shamirBasicSecurityRepository;
         this.secretsFactory = secretsFactory;
