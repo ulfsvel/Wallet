@@ -37,9 +37,6 @@ public class BtcWalletService {
         this.bitcoinSettings = bitcoinSettings;
     }
 
-    /**
-     * https://developpaper.com/how-to-generate-bitcoin-wallet-address-in-java/
-     */
     static private String adjustTo64(String s) {
         switch (s.length()) {
             case 62:
@@ -53,9 +50,6 @@ public class BtcWalletService {
         }
     }
 
-    /**
-     * https://developpaper.com/how-to-generate-bitcoin-wallet-address-in-java/
-     */
     public UnencryptedWallet generateWallet() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("EC");
         ECGenParameterSpec secp256k1 = new ECGenParameterSpec("secp256k1");
