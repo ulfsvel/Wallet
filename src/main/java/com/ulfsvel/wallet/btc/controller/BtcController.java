@@ -128,7 +128,7 @@ public class BtcController {
         return new WalletBalanceResponse(balance);
     }
 
-    @PostMapping("transferFounds")
+    @PostMapping("transferFunds")
     public WalletTransactionResponse transferBalance(
             @RequestBody TransferFoundsRequest transferFoundsRequest,
             Principal principal

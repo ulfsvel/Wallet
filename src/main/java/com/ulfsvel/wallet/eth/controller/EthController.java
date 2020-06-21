@@ -129,7 +129,7 @@ public class EthController {
         return new WalletBalanceResponse(balance);
     }
 
-    @PostMapping("transferFounds")
+    @PostMapping("transferFunds")
     public WalletTransactionResponse transferBalance(
             @RequestBody TransferFoundsRequest transferFoundsRequest,
             Principal principal
