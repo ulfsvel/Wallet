@@ -13,6 +13,7 @@ import com.ulfsvel.wallet.common.response.WalletSecurityResponse;
 import com.ulfsvel.wallet.common.types.WalletSecurityType;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -122,7 +123,7 @@ public class ShamirAdvancedWalletSecurityService implements WalletSecurityServic
         }
         List<?> list = (List<?>) walletCredentials.get("shares");
         for (Object element : list) {
-            if (!(element instanceof Share)) {
+            if (!(element instanceof String)) {
                 return false;
             }
         }
@@ -130,8 +131,12 @@ public class ShamirAdvancedWalletSecurityService implements WalletSecurityServic
     }
 
     private List<Share> getShares(WalletCredentials walletCredentials) {
-        //noinspection unchecked
-        return (List<Share>) walletCredentials.get("shares");
+        List<String> credentials = (List<String>) walletCredentials.get("shares");
+        List<Share> result = new ArrayList<>(credentials.size());
+        for (String credential : credentials) {
+            result.add(new Share(credential));
+        }
+        return result;
     }
 
     @Override
