@@ -6,15 +6,13 @@
 !includeurl AWSPUML/NetworkingContentDelivery/AmazonRoute53/AmazonRoute53.puml
 !includeurl AWSPUML/NetworkingContentDelivery/AmazonVPC/AmazonVPC.puml
 !includeurl AWSPUML/NetworkingContentDelivery/AmazonCloudFront/AmazonCloudFront.puml
-!includeurl AWSPUML/Database/AmazonRDS/AmazonRDS.puml
-!includeurl AWSPUML/Database/AmazonRDS/MySQLDBinstance/MySQLDBinstance.puml
-!includeurl AWSPUML/Compute/AWSLambda/AWSLambda.puml
-!includeurl AWSPUML/Compute/AWSLambda/LambdaFunction/LambdaFunction.puml
+!includeurl AWSPUML/Compute/AmazonEC2/AmazonEC2.puml
 !includeurl AWSPUML/NetworkingContentDelivery/AmazonRoute53/AmazonRoute53.puml
 !includeurl AWSPUML/General/AWScloud/AWScloud.puml
-!includeurl AWSPUML/ApplicationServices/AmazonAPIGateway/AmazonAPIGateway.puml
 !includeurl AWSPUML/General/client/client.puml
 !includeurl AWSPUML/General/user/user.puml
+!includeurl AWSPUML/Database/AmazonDynamoDB/AmazonDynamoDB.puml
+!includeurl AWSPUML/General/traditionalserver/traditionalserver.puml
 
 @startuml
 
@@ -25,42 +23,39 @@ AWSCLOUD(aws) {
 
     AMAZONROUTE53(route_53)
 
-    AMAZONAPIGATEWAY(api_gateway, "Backend")
-
-    AMAZONCLOUDFRONT(cloud_front, "Frontend")
+    AMAZONCLOUDFRONT(cloud_front, "Front End CDN")
 
     AMAZONS3(s3) {
-        BUCKET(artifacts, "Backend and frontend artifacts")
+        BUCKET(artifacts, "Front End Artifacts and Email Storage")
     }
 
 
     AMAZONVPC(vpc){
-        AWSLAMBDA(lambda){
-            LAMBDAFUNCTION(lambda_backend, "Serverless API")
-        }
-
-        AMAZONRDS(rds){
-            MYSQLDBINSTANCE(db, "Backend database")
-        }
+        AMAZONEC2(ec2, "Back End Server, Database and Bitcoin Node")
     }
 
     AMAZONSES(ses)
 
+    AMAZONDYNAMODB(dynamo, "Secret Storage")
+
 }
+
+TRADITIONALSERVER(infura, "Ethereum Node")
 
 user - browser
 
 browser - route_53
 
 route_53 -d-> cloud_front
-route_53 -d-> api_gateway
+route_53 -d-> ec2
 
 cloud_front -d-> artifacts
 
-api_gateway -d-> lambda_backend
+ec2 -d-> ses
+ec2 -d-> dynamo
 
-lambda_backend -d-> db
-lambda_backend -d-> artifacts
-lambda_backend -d-> ses
+ses -d-> artifacts
+
+ec2 -d-> infura
 
 @enduml

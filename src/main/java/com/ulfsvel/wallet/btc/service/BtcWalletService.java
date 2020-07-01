@@ -1,6 +1,5 @@
 package com.ulfsvel.wallet.btc.service;
 
-import com.nimbusds.jose.util.StandardCharset;
 import com.ulfsvel.wallet.btc.config.BitcoinSettings;
 import com.ulfsvel.wallet.btc.entity.*;
 import com.ulfsvel.wallet.common.entity.UnencryptedWallet;
@@ -15,6 +14,7 @@ import org.bitcoinj.core.Base58;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
@@ -70,7 +70,7 @@ public class BtcWalletService {
 
 
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
-        byte[] firstSha256 = sha.digest(bitcoinPublicKey.getBytes(StandardCharset.UTF_8));
+        byte[] firstSha256 = sha.digest(bitcoinPublicKey.getBytes(StandardCharsets.UTF_8));
         MessageDigest rmd = MessageDigest.getInstance("RipeMD160", "BC");
         byte[] ripeMd160 = rmd.digest(firstSha256);
         byte[] adjustedRipeMd160 = new byte[ripeMd160.length + 1];
